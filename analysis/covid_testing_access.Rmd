@@ -93,7 +93,7 @@ df_distance_to_testing %>%
   mutate(duration_category=cut(duration, breaks=0:12*10, labels=make_labels(max_dist=120, divisor=10, descriptor='min'))) %>%
   group_by( duration_category) %>%
   summarise( persons = sum(Person)) %>%
-  ggplot( aes( duration_category, persons) ) + 
+  ggplot( aes( duration_category, persons) ) +
     geom_col() +
   ggtitle( "Population within N minutes of closest testing site ")
 
@@ -125,14 +125,14 @@ df_closest_site %>%
   inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
   group_by(id)  %>%
   summarise( area = sum(AREA_ALBERS_SQKM ),
-            dwelling = sum(Dwelling), 
+           dwelling = sum(Dwelling),
             population = sum(Person),
-            mean_dist = mean(dist), 
+            mean_dist = mean(dist),
             mean_duration = mean(duration),
             n_mesh_blocks=n(),
             .groups='drop'
             ) %>%
-  inner_join( df_covid_remoteness, by='id') %>% 
+  inner_join( df_covid_remoteness, by='id') %>%
   { . } -> df_site_summary
 #
 #
@@ -195,3 +195,42 @@ df_closest_site %>%
 ```
 
 
+
+marry mesh block into sa2 -
+
+
+which SA's have shortest and longest travel times to testing sites
+
+average traveltime Meshblock per sa1
+
+
+sa1 x avg travel time, sa2 x avg travel time
+
+
+```{r csv }
+
+df_closest_site %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_mesh_sa1, by = "MB_CODE16")  %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
+  group_by(SA1_MAIN16) %>%
+  summarise( dist = mean(dist),
+         duration = mean(duration),
+         n_mesh_blocks = n(), .groups='drop') %>%
+  write_csv('output/summary_sa1.csv')
+
+
+df_closest_site %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_mesh_sa2, by = "MB_CODE16")  %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
+  group_by(SA2_MAIN16) %>%
+  summarise( dist = mean(dist),
+            duration = mean(duration),
+            n_mesh_blocks = n(), .groups='drop') %>%
+  write_csv('output/summary_sa2.csv')
+
+
+```

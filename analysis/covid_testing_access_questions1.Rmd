@@ -1,0 +1,145 @@
+
+---
+title:           Covid Testing Access
+author:          Dr Ali Lakhani and Dr Dennis Wollersheim
+date:            25.07.2020
+linkcolor:       cyan
+citecolor:       grey
+output:
+  pdf_document:
+    highlight:   zenburn
+  html_document:
+    code_folding: hide
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+\tableofcontents
+
+
+```{r init, include=F}
+
+source('_drake.R')
+
+loadd(df_crow_distances )
+loadd(df_distance_to_testing)
+
+df_crow_distances %>%
+  group_by( MB_CODE16) %>%
+  filter( dist == min(dist) ) %>%
+  ungroup() %>%
+  { . } -> df_closest_site
+
+```
+
+# How many mesh blocks in Victoria?
+```{r}
+df_distance_to_testing %>% nrow()
+```
+# What was the mean, SD, min and max travel time and distance for mesh blocks to the closest provider?
+
+## Note: Distance in M, duration in minutes
+
+
+```{r}
+
+df_closest_site %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
+  drop_na() %>%
+  summarise( across( starts_with('d'),
+                    list(mean=mean, min=min, max=max, sd=sd ),
+                    .names="{col}.{fn}" ), .groups='drop') %>%
+  gt::gt()
+
+
+```
+
+# What program did you use and road network did you use to conduct travel time
+
+```{r}
+#bibtex::write.bib(c('tidyverse', 'drake', 'osrm','sf','rmarkdown'), file='output/references')
+```
+
+Road network came from from open street map (2020). Statistics were done using R 4.0 (R Core Team, 2020), and the GIS was done using the sf and osrm packages. The tidyverse, rmarkdown, and drake packages were used to provide reproducible results
+
+# Bibtex references
+
+
+ @misc{OpenStreetMap,
+ author = {{OpenStreetMap contributors}},
+ title = {{Australia road network dump retrieved from https://www.geofabrik.de }},
+ howpublished = "\url{ https://www.geofabrik.de/data/download.html }",
+ year = {2020},
+ }
+
+
+@Manual{,
+title = {R: A Language and Environment for Statistical Computing},
+author = {{R Core Team}},
+organization = {R Foundation for Statistical Computing},
+address = {Vienna, Austria},
+year = {2020},
+url = {http://www.R-project.org/},
+}
+
+
+@Article{tidyverse,
+  title = {Welcome to the {tidyverse}},
+  author = {Hadley Wickham and Mara Averick and Jennifer Bryan and Winston Chang and Lucy D'Agostino McGowan and Romain François and Garrett Grolemund and Alex Hayes and Lionel Henry and Jim Hester and Max Kuhn and Thomas Lin Pedersen and Evan Miller and Stephan Milton Bache and Kirill Müller and Jeroen Ooms and David Robinson and Dana Paige Seidel and Vitalie Spinu and Kohske Takahashi and Davis Vaughan and Claus Wilke and Kara Woo and Hiroaki Yutani},
+  year = {2019},
+  journal = {Journal of Open Source Software},
+  volume = {4},
+  number = {43},
+  pages = {1686},
+  doi = {10.21105/joss.01686},
+}
+
+@Article{drake,
+  title = {The drake R package: a pipeline toolkit for reproducibility and high-performance computing},
+  author = {William Michael Landau},
+  journal = {Journal of Open Source Software},
+  year = {2018},
+  volume = {3},
+  number = {21},
+  url = {https://doi.org/10.21105/joss.00550},
+}
+
+@Manual{osrm,
+  title = {osrm: Interface Between R and the OpenStreetMap-Based Routing Service
+OSRM},
+  author = {Timothée Giraud},
+  year = {2020},
+  note = {R package version 3.3.3},
+  url = {https://CRAN.R-project.org/package=osrm},
+}
+
+@Article{sf,
+  author = {Edzer Pebesma},
+  title = {{Simple Features for R: Standardized Support for Spatial Vector Data}},
+  year = {2018},
+  journal = {{The R Journal}},
+  doi = {10.32614/RJ-2018-009},
+  url = {https://doi.org/10.32614/RJ-2018-009},
+  pages = {439--446},
+  volume = {10},
+  number = {1},
+}
+
+@Manual{rmarkdown1,
+  title = {rmarkdown: Dynamic Documents for R},
+  author = {JJ Allaire and Yihui Xie and Jonathan McPherson and Javier Luraschi and Kevin Ushey and Aron Atkins and Hadley Wickham and Joe Cheng and Winston Chang and Richard Iannone},
+  year = {2020},
+  note = {R package version 2.1},
+  url = {https://github.com/rstudio/rmarkdown},
+}
+
+@Book{rmarkdown2,
+  title = {R Markdown: The Definitive Guide},
+  author = {Yihui Xie and J.J. Allaire and Garrett Grolemund},
+  publisher = {Chapman and Hall/CRC},
+  address = {Boca Raton, Florida},
+  year = {2018},
+  note = {ISBN 9781138359338},
+  url = {https://bookdown.org/yihui/rmarkdown},
+}
