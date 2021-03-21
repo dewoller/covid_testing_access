@@ -1,6 +1,6 @@
 calculate_driving_time <- function( df_mesh_in_reach ) {
 
-  options(osrm.server = "http://localhost:5000/")
+  options(osrm.server = "http://192.168.1.97:5000/")
   getOption("osrm.server")
 
   # parallel::detectCores() %>%

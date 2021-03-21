@@ -22,7 +22,14 @@ loadd(df_pt_segments_small)
 loadd(df_final)
 
 
+
+
 ```
+
+mesh blocks intersection with 5km circle, to determine population density
+
+
+
 
 # Base Hospital Dataset Descriptive stats
 
