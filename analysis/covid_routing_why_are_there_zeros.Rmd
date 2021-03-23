@@ -1,0 +1,229 @@
+---
+title:           Covid Testing Access
+author:          Dennis Wollersheim  and Ali Lakhani
+date:            25.07.2020
+linkcolor:       cyan
+citecolor:       grey
+output:
+  pdf_document:
+    highlight:   zenburn
+---
+
+\tableofcontents
+
+
+# initialisation
+```{r init}
+
+source('_drake.R')
+
+loadd(df_covid_remoteness)
+loadd(df_mesh_detail )
+loadd(df_crow_distances )
+loadd(df_mesh_in_reach )
+loadd(df_population_in_reach )
+loadd(df_driving_time )
+loadd(df_distance_to_testing)
+loadd( df_mesh_sa1 )
+loadd( df_mesh_sa2 )
+
+
+```
+
+
+# driving time summary - zero duration analysis
+## Are there zeros?
+yes.  From 12 distinct meshblocks
+
+```{r}
+
+df_driving_time %>%
+  filter( duration==0) %>%
+  distinct( MB_CODE16, id)
+
+
+
+```
+## Are they really zero driving duration?
+calculate them again - yes
+
+```{r}
+
+df_driving_time %>%
+  filter( duration==0) %>%
+  inner_join( readd(df_covid_test_location)) %>%
+  calculate_driving_time()
+
+```
+## Distance  analysis
+
+How far between these ids and meshblocks
+Totalling about 600M, or 50M average
+
+Also note, these are pretty much the closest meshblocks to each of these testing locations
+
+```{r}
+
+
+df_driving_time %>%
+  filter( duration==0) %>%
+  inner_join(  df_crow_distances ) %>%
+  ungroup() %>%
+  summarise( sum(dist))
+
+df_driving_time %>%
+  filter( duration==0) %>%
+  inner_join(  df_crow_distances, by='id' ) %>%
+  group_by(id) %>%
+  filter( dist==min(dist)) %>%
+  ungroup() %>%
+  summarise( sum(dist))
+
+```
+
+## Distance between each testing station and closest meshblock
+50M average is not unusual
+
+```{r}
+
+
+df_crow_distances %>%
+  group_by(id) %>%
+  filter( dist==min(dist)) %>%
+  ungroup() %>%
+  ggplot(aes( dist ) ) +
+  geom_histogram()
+
+```
+
+## Distance between each testing station and all meshblock
+
+```{r}
+
+df_crow_distances %>%
+  ggplot(aes( dist ) ) +
+  geom_histogram()
+
+```
+
+## Duration between each testing station and closest meshblock
+50M average is not unusual
+
+```{r}
+
+
+df_driving_time %>%
+  group_by(id) %>%
+  filter( duration==min(duration)) %>%
+  ungroup() %>%
+  ggplot(aes( duration ) ) +
+  geom_histogram()
+
+```
+
+## Duration between each testing station and all meshblock
+
+```{r}
+
+df_driving_time %>%
+  ggplot(aes( duration ) ) +
+  geom_histogram()
+
+```
+
+closest testing site to mesh block
+
+How many mesh blocks / population are closest to a test site
+
+for each mesh block, find the closest test site (as crow flies )
+for each test site, how many mesh blocks / population / average road distance  to these closest mesh blocks
+
+testing site x closest population, number of mesh blocks
+
+remoteness of testing site (based on shape file)
+
+```{r}
+
+df_crow_distances %>%
+  group_by( MB_CODE16) %>%
+  filter( dist == min(dist) ) %>%
+  ungroup() %>%
+  { . } -> df_closest_site
+
+df_closest_site %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_mesh_detail, by = "MB_CODE16")  %>%
+  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
+  group_by(id)  %>%
+  summarise( area = sum(AREA_ALBERS_SQKM ),
+           dwelling = sum(Dwelling),
+            population = sum(Person),
+            mean_dist = mean(dist),
+            mean_duration = mean(duration),
+            n_mesh_blocks=n(),
+            .groups='drop'
+            ) %>%
+  inner_join( df_covid_remoteness, by='id') %>%
+  { . } -> df_site_summary
+
+df_site_summary %>%
+  DT::datatable()
+
+#
+#
+df_site_summary %>%
+  write_csv('output/summary_testing_site.csv')
+
+
+df_closest_site %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_mesh_detail, by = "MB_CODE16")  %>%
+  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
+  write_csv('output/mesh_block_summary.csv')
+
+#
+#
+
+```
+
+
+
+marry mesh block into sa2 -
+
+
+which SA's have shortest and longest travel times to testing sites
+
+average traveltime Meshblock per sa1
+
+
+sa1 x avg travel time, sa2 x avg travel time
+
+
+```{r csv }
+
+df_closest_site %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_mesh_sa1, by = "MB_CODE16")  %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
+  group_by(SA1_MAIN16) %>%
+  summarise( dist = mean(dist),
+         duration = mean(duration),
+         n_mesh_blocks = n(), .groups='drop') %>%
+  write_csv('output/summary_sa1.csv')
+
+
+df_closest_site %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_mesh_sa2, by = "MB_CODE16")  %>%
+  select(-starts_with('mc'), -starts_with('covid'))  %>%
+  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
+  group_by(SA2_MAIN16) %>%
+  summarise( dist = mean(dist),
+            duration = mean(duration),
+            n_mesh_blocks = n(), .groups='drop') %>%
+  write_csv('output/summary_sa2.csv')
+
+
+```
+
