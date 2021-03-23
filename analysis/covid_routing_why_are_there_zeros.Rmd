@@ -55,24 +55,52 @@ df_driving_time %>%
   calculate_driving_time()
 
 ```
+
+# driving time summary - NA duration analysis
+## Are there NA?
+yes.  From 5 distinct meshblocks / ID
+
+```{r}
+
+df_driving_time %>%
+  filter(is.na( duration)) %>%
+  distinct( MB_CODE16, id)
+
+
+
+```
+## Are they really NA driving duration?
+calculate them again - yes
+
+```{r}
+
+df_driving_time %>%
+  filter(is.na( duration)) %>%
+  inner_join( readd(df_covid_test_location)) %>%
+  calculate_driving_time()
+
+```
+
+
+
 ## Distance  analysis
 
-How far between these ids and meshblocks
-Totalling about 600M, or 50M average
+How far between these NA duration ids and meshblocks
+Totalling 457M, or 100M average
 
-Also note, these are pretty much the closest meshblocks to each of these testing locations
+Also note, these are the closest meshblocks to each of these testing locations
 
 ```{r}
 
 
 df_driving_time %>%
-  filter( duration==0) %>%
-  inner_join(  df_crow_distances ) %>%
+  filter(is.na( duration)) %>%
+  inner_join(  df_crow_distances, by = c("id", "MB_CODE16") ) %>%
   ungroup() %>%
   summarise( sum(dist))
 
 df_driving_time %>%
-  filter( duration==0) %>%
+  filter(is.na( duration)) %>%
   inner_join(  df_crow_distances, by='id' ) %>%
   group_by(id) %>%
   filter( dist==min(dist)) %>%
@@ -82,7 +110,7 @@ df_driving_time %>%
 ```
 
 ## Distance between each testing station and closest meshblock
-50M average is not unusual
+100M average is not unusual
 
 ```{r}
 
@@ -106,8 +134,7 @@ df_crow_distances %>%
 
 ```
 
-## Duration between each testing station and closest meshblock
-50M average is not unusual
+## Duration between each testing station and closest meshblock (by duration)
 
 ```{r}
 
@@ -149,6 +176,7 @@ df_crow_distances %>%
   filter( dist == min(dist) ) %>%
   ungroup() %>%
   { . } -> df_closest_site
+
 
 df_closest_site %>%
   select(-starts_with('mc'), -starts_with('covid'))  %>%

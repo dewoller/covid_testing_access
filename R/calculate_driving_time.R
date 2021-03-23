@@ -26,9 +26,6 @@ tictoc::tic('finished overall driving time calculation')
 
   tictoc::toc()
 
-  df_driving_time %>%
-    filter( is.na( duration))
-
   df_driving_time
 }
 
