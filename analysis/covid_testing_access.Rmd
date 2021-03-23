@@ -34,26 +34,6 @@ df_mesh_correspondence %>% count(RA_CODE_2016 )
 
 
 # driving time summary
-
-```{r}
-
-df_driving_time %>%
-  group_by(id) %>%
-  summarise( duration = mean(duration, .group='drop' )) %>%
-  inner_join(df_population_in_reach, by='id' ) %>%
-  ggplot(aes( duration, total_area) ) +
-  geom_point()
-
-df_driving_time %>%
-  group_by(id) %>%
-  summarise( duration = mean(duration, .group='drop' )) %>%
-  inner_join(df_population_in_reach, by='id' ) %>%
-  ggplot(aes( duration, total_persons) ) +
-  geom_point()
-
-
-```
-
 The closer you are to a covid testing site, the faster it is to get there...
 
 ```{r }
@@ -115,7 +95,7 @@ remoteness of testing site (based on shape file)
 
 df_crow_distances %>%
   group_by( MB_CODE16) %>%
-  filter( dist == min(dist) ) %>% 
+  filter( dist == min(dist) ) %>%
   ungroup() %>%
   { . } -> df_closest_site
 
@@ -174,9 +154,9 @@ df_closest_site %>%
   select(-starts_with('mc'), -starts_with('covid'))  %>%
   inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
   group_by(SA1_MAIN16) %>%
-  summarise( dist = mean(dist), 
-         duration = mean(duration), 
-         n_mesh_blocks = n(), .groups='drop') %>% 
+  summarise( dist = mean(dist),
+         duration = mean(duration),
+         n_mesh_blocks = n(), .groups='drop') %>%
   write_csv('output/summary_sa1.csv')
 
 
@@ -186,9 +166,9 @@ df_closest_site %>%
   select(-starts_with('mc'), -starts_with('covid'))  %>%
   inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
   group_by(SA2_MAIN16) %>%
-  summarise( dist = mean(dist), 
-            duration = mean(duration), 
-            n_mesh_blocks = n(), .groups='drop') %>% 
+  summarise( dist = mean(dist),
+            duration = mean(duration),
+            n_mesh_blocks = n(), .groups='drop') %>%
   write_csv('output/summary_sa2.csv')
 
 

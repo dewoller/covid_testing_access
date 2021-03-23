@@ -1,6 +1,6 @@
 calculate_driving_time <- function( df_mesh_in_reach ) {
 
-  options(osrm.server = "http://192.168.1.97:5000/")
+  options(osrm.server = "http://127.0.0.1:5000/")
   getOption("osrm.server")
 
   # parallel::detectCores() %>%
@@ -8,25 +8,53 @@ calculate_driving_time <- function( df_mesh_in_reach ) {
   #   cluster_library(c("tidyverse",'osrm')) %>%
   #   cluster_copy( "calculate_driving_time_chunk") %>%
   #   { . } -> cluster
-  #
-   df_mesh_in_reach %>%
-    drop_na() %>%
-    { . } -> df_mesh_rv
+  t=c(107,101,105,89)
+m=as.character(c(20380091000   , 20345140000   , 20293470000   ))
 
-  df_mesh_rv %>%
+
+tictoc::tic('finished overall driving time calculation')
+#
+   df_mesh_in_reach %>%
+#    filter( id %in% t) %>%
+#    filter( MB_CODE16 %in% m) %>%
     group_by(id) %>%
     select( id, lon = covid_lon, lat=covid_lat,  MB_CODE16, mc_lon, mc_lat ) %>%
     nest( data=c(MB_CODE16, mc_lon, mc_lat )) %>%
     do( duration = calculate_driving_time_chunk(.$id, .$lon, .$lat, data.frame(.$data) )) %>%
-    unnest(duration)
+    unnest(duration) %>%
+    { . } -> df_driving_time
 
+  tictoc::toc()
 
+  df_driving_time %>%
+    filter( is.na( duration))
+
+  df_driving_time
 }
 
 calculate_driving_time_test <- function(  ) {
 
   source('_drake.R')
 
+
+  df_driving_time %>%
+    filter( duration==0) %>%
+    inner_join( df_covid_test_location) %>%
+    calculate_driving_time()
+
+  df_driving_time %>%
+    filter( duration==0) %>%
+    inner_join(  df_crow_distances ) %>%
+  ungroup() %>%
+    summarise( sum(dist))
+
+  df_driving_time %>%
+    filter( duration==0) %>%
+    inner_join(  df_crow_distances, by='id' ) %>%
+    group_by(id) %>%
+    filter( dist==min(dist)) %>%
+    ungroup() %>%
+    summarise( sum(dist))
 
   readd(df_mesh_in_reach) %>%
     filter(id==min(id)) %>%
@@ -60,6 +88,7 @@ calculate_driving_time_test <- function(  ) {
 ###################################################################################################
 calculate_driving_time_chunk<- function( id, lon, lat, df_mesh_location ) {
 
+  tictoc::tic(paste('Finished calculating time to drive to ', id))
 #  browser()
 #  df_mesh_rv %>%
 #    select( id=MB_CODE16, lon = mc_lon, lat=mc_lat) %>%
@@ -90,7 +119,7 @@ df_covid_location = tribble( ~id, ~lon, ~lat, id, lon, lat  )
                       measure='duration') %>%
     pluck('durations')
 
-
+tictoc::toc()
     rv = c(rv, slice)
 
   }

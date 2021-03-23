@@ -1,27 +1,27 @@
 
 
-max_distance = 60
+max_distance = 60000
 the_plan <-
   drake_plan(
 
              map_mesh= read_sf( 'data/meshblocks/MB_2016_VIC.shp') %>%
                rmapshaper::ms_simplify( sys = TRUE) ,
 
-             df_lga_lockdown=read_csv(file_in( 'data/lga_lockdown.csv')) %>%
-               janitor::clean_names() %>%
-               rename( lga_name = municipality ),
-
-             map_lockdown_lga= read_sf( 'data/lga/LGA_2016_AUST.shp') %>%
-               rmapshaper::ms_simplify( sys = TRUE)  %>%
-               filter(STE_CODE16 == 2) %>%
-               mutate( lga_name = str_replace( LGA_NAME16, ' *\\(.*\\)','') ) %>%
-               inner_join( df_lga_lockdown, by='lga_name'),
-
+#             df_lga_lockdown=read_csv(file_in( 'data/lga_lockdown.csv')) %>%
+#               janitor::clean_names() %>%
+#               rename( lga_name = municipality ),
+#
+#             map_lockdown_lga= read_sf( 'data/lga/LGA_2016_AUST.shp') %>%
+#               rmapshaper::ms_simplify( sys = TRUE)  %>%
+#               filter(STE_CODE16 == 2) %>%
+#               mutate( lga_name = str_replace( LGA_NAME16, ' *\\(.*\\)','') ) %>%
+#               inner_join( df_lga_lockdown, by='lga_name'),
+#
              map_sa1= read_sf( 'data/sa1/SA1_2016_AUST.shp') %>%
                rmapshaper::ms_simplify( sys = TRUE)  ,
              map_sa2= read_sf( 'data/sa2/SA2_2016_AUST.shp') %>%
                rmapshaper::ms_simplify( sys = TRUE)  ,
-             #map_remoteness = read_sf("data/remoteness/RA_2016_AUST.shp"),
+             map_remoteness = read_sf("data/remoteness/RA_2016_AUST.shp"),
 
              df_mesh_detail = read_excel("data/2016 census mesh block counts.xls", sheet="Table 2", skip=5,
                                          na='Cells in this table have been randomly adjusted to avoid the release of confidential data.') %>%
@@ -69,42 +69,26 @@ the_plan <-
 #             df_mesh_in_reach = target( exclude_distant_meshes( df_crow_distances, maximum_distance),
 #                                                   transform=map(maximum_distance=max_distances)),
              df_mesh_in_reach = exclude_distant_meshes( df_crow_distances, max_distance),
-             df_population_in_reach = calculate_population_in_reach( df_mesh_in_reach, df_mesh_detail),
+             #df_population_in_reach = calculate_population_in_reach( df_mesh_in_reach, df_mesh_detail),
              df_driving_time = calculate_driving_time( df_mesh_in_reach),
              df_distance_to_testing = calculate_distance_to_testing( df_driving_time, df_crow_distances),
 
-             report = target( wflow_publish(knitr_in("analysis/covid_testing_access.Rmd"),
-                                            view = TRUE,
-                                            verbose = TRUE ) ),
-
-             df_mesh_sa1 = categorise_points( df_mesh_centroids,
-                                             long_txt='mc_lon',
-                                             lat_txt='mc_lat',
-                                             map_data=map_sa1,
-                                             column="SA1_MAIN16") ,
-
-             df_mesh_sa2 = categorise_points( df_mesh_centroids,
-                                             long_txt='mc_lon',
-                                             lat_txt='mc_lat',
-                                             map_data=map_sa2,
-                                             column="SA2_MAIN16"),
-
-             df_mesh_lockdown = categorise_points( df_mesh_centroids,
-                                                  long_txt='mc_lon',
-                                                  lat_txt='mc_lat',
-                                                  map_data=map_lockdown_lga,
-                                                  column="lga_name") %>%
-             filter( lga_name != ''),
-
-           df_mesh_lockdown_distance = calculate_intermesh_distances( df_mesh_centroids, df_mesh_lockdown, df_mesh_detail, map_mesh),
-           df_mesh_lockdown_summary_all = summarise_intermesh_distances( df_mesh_lockdown_distance, df_mesh_lockdown, df_mesh_detail, df_mesh_sa1, df_mesh_sa2),
-           df_mesh_lockdown_summary_residential = df_mesh_lockdown_summary_all %>% filter( MB_CATEGORY_NAME_2016 == 'Residential'),
-           df_mesh_lockdown_summary_parks = df_mesh_lockdown_summary_all %>% filter( MB_CATEGORY_NAME_2016 == 'Parkland'),
-           #
-           report = target( wflow_publish(knitr_in("analysis/lockdown_greenspace.Rmd"),
-                                          view = TRUE,
-                                          verbose = TRUE ) ),
-
+#             df_mesh_lockdown = categorise_points( df_mesh_centroids,
+#                                                  long_txt='mc_lon',
+#                                                  lat_txt='mc_lat',
+#                                                  map_data=map_lockdown_lga,
+#                                                  column="lga_name") %>%
+#             filter( lga_name != ''),
+#
+#           df_mesh_lockdown_distance = calculate_intermesh_distances( df_mesh_centroids, df_mesh_lockdown, df_mesh_detail, map_mesh),
+#           df_mesh_lockdown_summary_all = summarise_intermesh_distances( df_mesh_lockdown_distance, df_mesh_lockdown, df_mesh_detail, df_mesh_sa1, df_mesh_sa2),
+#           df_mesh_lockdown_summary_residential = df_mesh_lockdown_summary_all %>% filter( MB_CATEGORY_NAME_2016 == 'Residential'),
+#           df_mesh_lockdown_summary_parks = df_mesh_lockdown_summary_all %>% filter( MB_CATEGORY_NAME_2016 == 'Parkland'),
+#           #
+#           report = target( wflow_publish(knitr_in("analysis/lockdown_greenspace.Rmd"),
+#                                          view = TRUE,
+#                                          verbose = TRUE ) ),
+#
 
 
              a=TRUE
