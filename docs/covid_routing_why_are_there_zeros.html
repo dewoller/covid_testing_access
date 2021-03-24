@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dennis Wollersheim and Ali Lakhani" />
+
+
+<title>Covid Testing Access</title>
+
+<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.17/datatables.js"></script>
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Covid Testing Access</h1>
+<h4 class="author">Dennis Wollersheim and Ali Lakhani</h4>
+<h4 class="date">25.07.2020</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2021-03-24
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>hospital_pt_accessability/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200708code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200708)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20200708code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20200708)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdewollerhospitalptaccessabilitytreee830487309fc9f36f155614ca5188a1087696cf8targetblanke830487a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/dewoller/hospital_pt_accessability/tree/e830487309fc9f36f155614ca5188a1087696cf8" target="_blank">e830487</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomdewollerhospitalptaccessabilitytreee830487309fc9f36f155614ca5188a1087696cf8targetblanke830487a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/dewoller/hospital_pt_accessability/tree/e830487309fc9f36f155614ca5188a1087696cf8" target="_blank">e830487</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .drake/
+    Ignored:    data/
+    Ignored:    keys.R
+
+Untracked files:
+    Untracked:  explore/explore.R
+
+Unstaged changes:
+    Modified:   R/address_to_lonlat.R
+    Modified:   R/calculate_distance_to_testing.R
+    Modified:   R/calculate_driving_time.R
+    Modified:   R/plan.R
+    Modified:   analysis/covid_testing_access.Rmd
+    Modified:   output/mesh_block_summary.csv
+    Modified:   output/summary_sa1.csv
+    Modified:   output/summary_sa2.csv
+    Modified:   output/summary_testing_site.csv
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/covid_routing_why_are_there_zeros.Rmd</code>) and HTML (<code>docs/covid_routing_why_are_there_zeros.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/dewoller/hospital_pt_accessability/blob/e830487309fc9f36f155614ca5188a1087696cf8/analysis/covid_routing_why_are_there_zeros.Rmd" target="_blank">e830487</a>
+</td>
+<td>
+Dennis Wollersheim
+</td>
+<td>
+2021-03-24
+</td>
+<td>
+workflowr::wflow_publish(“analysis/covid_routing_why_are_there_zeros.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="initialisation" class="section level1">
+<h1>initialisation</h1>
+<pre class="r"><code>source(&#39;_drake.R&#39;)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>✔ ggplot2 3.3.3     ✔ purrr   0.3.4
+✔ tibble  3.1.0     ✔ dplyr   1.0.5
+✔ tidyr   1.1.3     ✔ stringr 1.4.0
+✔ readr   1.4.0     ✔ forcats 0.5.1</code></pre>
+<pre><code>Warning: package &#39;tibble&#39; was built under R version 4.0.4</code></pre>
+<pre><code>Warning: package &#39;tidyr&#39; was built under R version 4.0.4</code></pre>
+<pre><code>Warning: package &#39;dplyr&#39; was built under R version 4.0.4</code></pre>
+<pre><code>Warning: package &#39;lubridate&#39; was built under R version 4.0.4</code></pre>
+<pre><code>Warning: package &#39;rmarkdown&#39; was built under R version 4.0.4</code></pre>
+<pre><code>Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1</code></pre>
+<pre><code>Data: (c) OpenStreetMap contributors, ODbL 1.0 - http://www.openstreetmap.org/copyright</code></pre>
+<pre><code>Routing: OSRM - http://project-osrm.org/</code></pre>
+<pre><code>Loading required package: rgeos</code></pre>
+<pre><code>Loading required package: sp</code></pre>
+<pre><code>rgeos version: 0.5-5, (SVN revision 640)
+ GEOS runtime version: 3.8.0-CAPI-1.13.1 
+ Linking to sp version: 1.4-2 
+ Polygon checking: TRUE </code></pre>
+<pre><code>Loading required package: maptools</code></pre>
+<pre><code>Warning: package &#39;maptools&#39; was built under R version 4.0.4</code></pre>
+<pre><code>Checking rgeos availability: TRUE</code></pre>
+<pre><code>This is workflowr version 1.6.2
+Run ?workflowr for help getting started</code></pre>
+<pre><code>Warning: package &#39;rvest&#39; was built under R version 4.0.4</code></pre>
+<pre><code>[conflicted] Will prefer purrr::pluck over any other package</code></pre>
+<pre><code>[conflicted] Will prefer dplyr::filter over any other package</code></pre>
+<pre><code>[conflicted] Will prefer dplyr::summarise over any other package</code></pre>
+<pre class="r"><code>loadd(df_covid_remoteness)
+loadd(df_mesh_detail )
+loadd(df_crow_distances )
+loadd(df_mesh_in_reach )
+loadd(df_population_in_reach )
+loadd(df_driving_time )
+loadd(df_distance_to_testing)
+loadd( df_mesh_sa1 )
+loadd( df_mesh_sa2 )</code></pre>
+</div>
+<div id="driving-time-summary---zero-duration-analysis" class="section level1">
+<h1>driving time summary - zero duration analysis</h1>
+<div id="are-there-zeros" class="section level2">
+<h2>Are there zeros?</h2>
+<p>yes. From 12 distinct meshblocks</p>
+<pre class="r"><code>df_driving_time %&gt;%
+  filter( duration==0) %&gt;%
+  distinct( MB_CODE16, id)</code></pre>
+<pre><code># A tibble: 12 x 2
+      id MB_CODE16  
+   &lt;dbl&gt; &lt;chr&gt;      
+ 1     6 20004210000
+ 2     8 20244290000
+ 3    23 20130430000
+ 4    30 20201454000
+ 5    38 20400890000
+ 6    42 20287440000
+ 7    66 20630231000
+ 8    70 20175420000
+ 9    73 20631922310
+10    97 20414301000
+11   120 20631932770
+12   136 20715190000</code></pre>
+</div>
+<div id="are-they-really-zero-driving-duration" class="section level2">
+<h2>Are they really zero driving duration?</h2>
+<p>calculate them again - yes</p>
+<pre class="r"><code>df_driving_time %&gt;%
+  filter( duration==0) %&gt;%
+  inner_join( readd(df_covid_test_location)) %&gt;%
+  calculate_driving_time()</code></pre>
+<pre><code>Joining, by = &quot;id&quot;</code></pre>
+<pre><code>Finished calculating time to drive to  6: 0.112 sec elapsed
+Finished calculating time to drive to  8: 0.018 sec elapsed
+Finished calculating time to drive to  23: 0.012 sec elapsed
+Finished calculating time to drive to  30: 0.022 sec elapsed
+Finished calculating time to drive to  38: 0.026 sec elapsed
+Finished calculating time to drive to  42: 0.022 sec elapsed
+Finished calculating time to drive to  66: 0.019 sec elapsed
+Finished calculating time to drive to  70: 0.019 sec elapsed
+Finished calculating time to drive to  73: 0.022 sec elapsed
+Finished calculating time to drive to  97: 0.015 sec elapsed
+Finished calculating time to drive to  120: 0.007 sec elapsed
+Finished calculating time to drive to  136: 0.012 sec elapsed
+finished overall driving time calculation: 0.556 sec elapsed</code></pre>
+<pre><code># A tibble: 12 x 5
+      id MB_CODE16   mc_lon mc_lat duration
+   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+ 1     6 20004210000   144.  -37.6        0
+ 2     8 20244290000   144.  -38.2        0
+ 3    23 20130430000   144.  -37.0        0
+ 4    30 20201454000   142.  -38.3        0
+ 5    38 20400890000   145.  -37.8        0
+ 6    42 20287440000   142.  -36.7        0
+ 7    66 20630231000   145.  -37.9        0
+ 8    70 20175420000   145.  -38.1        0
+ 9    73 20631922310   145.  -37.8        0
+10    97 20414301000   142.  -34.2        0
+11   120 20631932770   145.  -37.7        0
+12   136 20715190000   145.  -37.8        0</code></pre>
+</div>
+<div id="distance-analysis" class="section level2">
+<h2>Distance analysis</h2>
+<p>How far between these ids and meshblocks Totalling about 600M, or 50M average</p>
+<p>Also note, these are pretty much the closest meshblocks to each of these testing locations</p>
+<pre class="r"><code>df_driving_time %&gt;%
+  filter( duration==0) %&gt;%
+  inner_join(  df_crow_distances ) %&gt;%
+  ungroup() %&gt;%
+  summarise( sum(dist))</code></pre>
+<pre><code>Joining, by = c(&quot;id&quot;, &quot;MB_CODE16&quot;, &quot;mc_lon&quot;, &quot;mc_lat&quot;)</code></pre>
+<pre><code># A tibble: 1 x 1
+  `sum(dist)`
+        &lt;dbl&gt;
+1        600.</code></pre>
+<pre class="r"><code>df_driving_time %&gt;%
+  filter( duration==0) %&gt;%
+  inner_join(  df_crow_distances, by=&#39;id&#39; ) %&gt;%
+  group_by(id) %&gt;%
+  filter( dist==min(dist)) %&gt;%
+  ungroup() %&gt;%
+  summarise( sum(dist))</code></pre>
+<pre><code># A tibble: 1 x 1
+  `sum(dist)`
+        &lt;dbl&gt;
+1        590.</code></pre>
+</div>
+<div id="distance-between-each-testing-station-and-closest-meshblock" class="section level2">
+<h2>Distance between each testing station and closest meshblock</h2>
+<p>50M average is not unusual</p>
+<pre class="r"><code>df_crow_distances %&gt;%
+  group_by(id) %&gt;%
+  filter( dist==min(dist)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes( dist ) ) +
+  geom_histogram()</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="figure/covid_routing_why_are_there_zeros.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="distance-between-each-testing-station-and-all-meshblock" class="section level2">
+<h2>Distance between each testing station and all meshblock</h2>
+<pre class="r"><code>df_crow_distances %&gt;%
+  ggplot(aes( dist ) ) +
+  geom_histogram()</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="figure/covid_routing_why_are_there_zeros.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="duration-between-each-testing-station-and-closest-meshblock" class="section level2">
+<h2>Duration between each testing station and closest meshblock</h2>
+<p>50M average is not unusual</p>
+<pre class="r"><code>df_driving_time %&gt;%
+  group_by(id) %&gt;%
+  filter( duration==min(duration)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes( duration ) ) +
+  geom_histogram()</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="figure/covid_routing_why_are_there_zeros.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="duration-between-each-testing-station-and-all-meshblock" class="section level2">
+<h2>Duration between each testing station and all meshblock</h2>
+<pre class="r"><code>df_driving_time %&gt;%
+  ggplot(aes( duration ) ) +
+  geom_histogram()</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>Warning: Removed 5 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="figure/covid_routing_why_are_there_zeros.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>closest testing site to mesh block</p>
+<p>How many mesh blocks / population are closest to a test site</p>
+<p>for each mesh block, find the closest test site (as crow flies ) for each test site, how many mesh blocks / population / average road distance to these closest mesh blocks</p>
+<p>testing site x closest population, number of mesh blocks</p>
+<p>remoteness of testing site (based on shape file)</p>
+<pre class="r"><code>df_crow_distances %&gt;%
+  group_by( MB_CODE16) %&gt;%
+  filter( dist == min(dist) ) %&gt;%
+  ungroup() %&gt;%
+  { . } -&gt; df_closest_site
+
+df_closest_site %&gt;%
+  select(-starts_with(&#39;mc&#39;), -starts_with(&#39;covid&#39;))  %&gt;%
+  inner_join(df_mesh_detail, by = &quot;MB_CODE16&quot;)  %&gt;%
+  inner_join(df_distance_to_testing, by = c(&quot;MB_CODE16&quot;, &#39;id&#39;) ) %&gt;%
+  group_by(id)  %&gt;%
+  summarise( area = sum(AREA_ALBERS_SQKM ),
+           dwelling = sum(Dwelling),
+            population = sum(Person),
+            mean_dist = mean(dist),
+            mean_duration = mean(duration),
+            n_mesh_blocks=n(),
+            .groups=&#39;drop&#39;
+            ) %&gt;%
+  inner_join( df_covid_remoteness, by=&#39;id&#39;) %&gt;%
+  { . } -&gt; df_site_summary
+
+df_site_summary %&gt;%
+  DT::datatable()</code></pre>
+<div id="htmlwidget-34c116755723228ee35a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-34c116755723228ee35a">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156"],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156],[31.8855,79.2424,22.7991,1871.3242,6.5846,5542.0605,1375.6821,5.6845,165.5296,3283.462,2179.8918,3340.9342,48.6554,1253.1305,113.6083,172.1839,1802.9337,13.6443,1244.861,2684.7218,824.552,584.9277,3903.394,51.9441,3178.5415,30.4488,6.1023,137.6605,216.0564,3622.8499,184.5062,1181.9821,6915.0065,6.1266,11.7989,8.4508,6.7265,2.4768,35.4457,76.7569,2720.5671,2408.5778,12050.4841,46.6184,13.2221,4201.3663,1071.3768,3443.8266,2078.104,571.9256,29.5028,9.0229,7.5256,4163.8268,22.0747,2191.0713,304.2735,466.1227,25.1419,43.2496,14.1021,48.2221,116.4051,3044.516,42.757,113.812,29.909,12.4704,20.6699,13.3028,8.957,11.1519,32.0909,20.0278,21.6613,30.7646,75.0097,84.7793,38.0992,11.159,76.9175,85.7471,2.7257,77.5804,0.7452,156.8865,21.43,7.3079,3.1378,94.7635,7.1348,8.1602,36.9114,35.4169,2853.0586,451.5115,18133.9171,4659.1356,322.5576,5522.4766,1183.4407,10998.9746,1543.0426,68.5154,14.3067,1678.2985,7146.7626,771.7947,21.7885,558.7302,17672.2549,192.7557,824.916,1252.2142,3.2891,10.7552,10318.7834,4031.6441,6551.7867,14.6568,641.8836,987.81,18.1407,945.8937,21.5687,238.6246,43.1498,4.9936,30.6584,1311.5223,1195.2039,105.2666,15.6708,6.0371,8.4634,4.7857,8.2717,17.0983,13.7531,11.6173,48.1168,3663.9823,3438.4751,63.9279,479.4079,130.7489,3893.7325,83.7558,331.5605,6.0896,1289.7105,13701.8721,2760.8426,2489.2185,3137.1013,1985.7598],[20400,41362,4368,16200,5336,55138,27481,3092,3122,42460,9083,8908,52817,7436,32495,48427,12180,12456,30869,10298,8317,26287,10431,35419,15904,5821,4266,25379,14190,8256,18916,11038,9459,20187,6414,23411,11504,12530,83806,25264,21865,4427,10410,15532,22657,15684,13925,7850,7178,21175,49584,8597,15437,5556,12391,7874,24434,9594,12715,16454,13710,38378,22806,15398,5100,12897,21906,5211,5886,10944,10288,8445,34694,18211,12588,23025,16992,13684,19181,11920,29266,32815,5154,93673,476,17515,18262,4556,4198,26946,6836,12864,41578,22924,9918,12419,15806,5795,26032,12739,20705,19208,17840,15281,3116,10500,7706,6345,5770,2344,10667,18233,4635,2921,2776,7521,5431,1645,4661,9685,3892,3471,16547,27050,11260,29998,54059,12529,6795,1613,9275,12825,14624,11091,7266,5568,17065,22485,7928,7646,1499,13791,7565,13314,25320,25099,6820,47963,13486,19889,5345,2756,2061,1869,2139,615],[48554,105270,9963,38186,12108,124914,68372,6418,4582,93780,21706,17779,129200,17275,81454,145369,26893,33285,80533,22730,20224,64953,19792,92305,34537,17920,9241,24800,14205,16436,27473,22994,19233,35072,18078,38664,23589,23229,157967,70323,51328,9565,20638,44180,40376,33160,22808,17888,16072,55360,105640,18391,26600,11065,28627,18442,65035,27638,38665,34403,36593,100423,51454,34111,10712,31038,55620,13200,12521,21567,25820,22761,85504,49687,33580,61524,43042,30441,57358,27775,75548,81507,10596,221443,767,44738,46140,12637,10042,82131,18629,28989,95722,59699,17338,21918,36107,12515,44864,27281,42882,31936,41482,44344,9288,18420,17013,17510,15174,5416,21091,57678,3478,2827,6058,19130,8517,1569,6850,26153,8653,7846,40225,72144,27116,85449,128675,21990,23469,3292,22997,38972,34131,23708,18242,12994,36677,55162,25273,17604,3970,30827,15407,42280,72650,69368,10379,126714,31334,39804,10725,5013,3735,3565,3719,1155],[2481.03778194414,3251.98182662956,1523.62350569378,11842.3409091959,1926.70080915592,9233.49185393042,6602.67726701128,969.07542715444,5971.73203344348,6456.62490924446,17974.1762786099,17194.7491962397,3293.29584208798,10350.7768020469,3949.42339461429,4106.22426429327,14523.9099312039,2866.92509091388,5923.37272039267,11227.772974067,4193.69097655941,4329.27586924318,16699.71602077,2685.0494813836,15243.6387583562,2818.41129976375,2107.98508499448,7482.90881737554,7235.70453111712,18221.5238652191,6178.754261008,13099.9105914741,23323.7601558699,1204.16072109896,1430.04128031455,1679.45779553191,2635.05320168813,661.43692896818,2657.62763836833,2796.0864273557,11877.911923354,19094.4753214782,31655.7985519729,3203.21105351816,1372.27515576693,18589.145294187,14864.1678523823,24891.989527036,13486.6494233287,6408.81925993314,2610.59960258012,952.285558254102,909.357338717774,18834.5161388022,2236.55042148197,8969.25231377201,3952.09182632728,3476.7221727878,1920.19092602859,2478.66259795087,1598.32062097594,2648.78053856126,3527.10251968606,11569.0239107591,1557.42842273021,2114.49237743364,2944.35884640477,1686.7701698141,1303.44180610501,2257.70759077149,1142.49179720971,1478.82144374123,2655.10030400617,2315.20806911843,1808.35758381872,2999.95208341607,4114.35997865782,3488.91403787133,2764.3162313458,1997.97865236037,3250.9471875006,2757.29442219968,713.268208397042,3718.30589146257,490.958074501116,6532.34947280382,2161.96137804738,2067.92549164025,1135.81108996193,2516.60902181186,1216.18218407544,1221.80050531586,2646.07433483972,2243.23615291505,24043.6073865936,6416.23342139414,30838.2829187536,18256.5623210135,10359.5952762831,23055.5893425143,10243.5879738343,48008.2548442417,7748.11806943162,2506.44855154582,1790.90612548145,15223.8223485806,21130.8426118114,6034.06266734347,1682.93867554975,15773.363542974,48714.3118540913,2131.95805397829,10374.8732208884,16667.6351913389,979.965300551817,1169.65923858877,39129.8446461751,31695.4280432141,29711.7217536641,1599.9288951134,5462.82950934706,6700.56357747931,2561.90343277152,7177.97100830218,3270.44225282707,4366.8414092182,2663.51715982813,1020.45170237145,1684.40403258585,8930.80304593469,10921.3527148113,2649.00234603009,1623.04060907017,1705.14864440038,1669.10169897653,1439.01250932928,2149.30188765332,2257.56348934039,1597.64289080912,1568.2315195812,3034.0761642814,16962.2359208377,15407.9561119866,2091.35372409362,5104.40558253448,3666.14003836322,19426.7946849612,4402.23605668764,5112.89848657251,1602.85129994522,9711.38516606266,54105.4763922497,21333.5932047723,22483.0544886702,16577.4272605412,17770.2716242637],[5.29958448753463,6.26089219330855,3.10518518518519,16.6481178396072,4.68406593406593,12.9894135962636,10.6765294771969,2.83142857142857,9.56126126126126,9.97823639774859,27.9375690607735,23.7659217877095,6.04313602015113,16.2374100719424,8.34412313432836,8.22420122365738,19.6114164904863,5.65549738219895,9.33481781376518,12.6039886039886,7.50282685512367,6.98920595533499,23.8550702028081,4.90883639545057,18.6266975308642,6.76666666666667,5.67037037037037,11.4910367170626,17.3804232804233,21.9014598540146,10.2760932944606,16.3917274939173,29.4953596287703,3.44955555555556,3.98326848249027,3.64911717495987,7.25288753799392,2.16818181818182,4.94762494836844,6.15809284818068,19.7839473684211,20.410303030303,35.1112648221344,5.67439393939394,3.51544885177453,28.0337438423645,21.4144329896907,31.3731543624161,20.4669291338583,9.90923317683881,4.94738929279577,2.61605351170569,2.56,21.5988929889299,4.83957783641161,16.0980327868852,8.07300275482094,7.16129032258065,4.22183622828784,5.11597222222222,3.34852941176471,5.39435626102293,5.99778597785978,18.3011824324324,4.02890995260663,4.15203836930456,5.71351351351351,4.60965909090909,2.76388888888889,4.23040380047506,3.04280701754386,3.65,5.0581308411215,5.35037037037037,4.59784688995215,5.84203102961918,6.8552734375,5.96735632183908,5.87544802867384,3.8464,7.6750273822563,5.44230769230769,2.60294117647059,6.50305661688086,1.73225806451613,12.3432291666667,4.77962003454231,4.40354609929078,3.17281553398058,5.8925,2.80478723404255,3.21497326203209,5.92677419354839,5.05047318611987,31.6006172839506,10.504118993135,33.5096121416526,32.0274131274131,15.4547729379055,31.090756302521,13.0519946808511,70.565293040293,10.7970297029703,6.04203539823009,4.73625,20.7250460405157,22.7949468085106,11.7154929577465,4.48186274509804,31.0608695652174,52.3474489795918,5.08562628336756,19.8723849372385,31.6647058823529,2.93424657534247,3.31078838174274,86.5120734908136,82.8093023255814,81.890350877193,4.624,7.97432432432432,11.805737704918,8.01865942028986,12.8713043478261,6.60307262569832,9.11345707656612,5.42271386430678,3.62046204620462,4.87136150234742,15.6506666666667,17.0756666666667,6.51868686868687,4.10425055928412,4.10716417910448,5.27880184331797,3.9971098265896,5.86204933586338,4.57813411078717,5.72227074235808,5.03214285714286,7.01666666666667,20.425,21.6939068100358,4.4155737704918,9.52688860435339,9.8275600505689,36.8142857142857,8.54308943089431,8.01625,3.15366726296959,12.8483146067416,51.927619047619,23.9476821192053,20.2775,19.3523489932886,21.0696428571429],[722,1345,135,611,182,1927,899,105,111,1599,362,358,1588,278,1072,1471,473,382,988,351,283,806,641,1143,648,201,162,926,567,411,686,411,431,450,257,623,329,132,2421,797,760,165,506,660,479,812,485,447,254,639,1513,299,205,271,379,305,726,279,403,720,408,1134,813,592,211,417,703,176,216,421,285,250,1070,540,418,709,512,435,558,375,913,988,136,2879,31,576,579,141,103,800,188,374,1240,634,486,437,593,259,1079,595,752,1092,606,452,160,543,376,213,204,92,588,487,239,187,73,241,381,86,228,275,148,122,552,805,358,862,1695,303,213,75,300,396,447,335,217,173,527,686,229,252,66,488,279,366,781,791,280,1599,480,559,267,210,151,120,149,56],["Altona North Medical Group","Ringwood - EACH","Mildura - Sunraysia Community Health","Albury Wodonga Health - Wodonga Campus","Austin Health - Austin Hospital","Ballarat Respiratory Clinic","Barwon Health - North Geelong (Clinic and drive through clinic)","Barwon Health - University Hospital Geelong","Bass Coast Health - Wonthaggi Hospital","Bendigo Health","Bendigo Respiratory Clinic - Spring Gully Primary Health","Benalla Health","Eastern Health - Box Hill Hospital","Eastern Health - Healesville (Senior Citizens Building)","Carrum Downs Respiratory Clinic","Monash Health - Berwick","Kyneton Health - Central Highlands Rural Health","Monash Health - Dandenong","Djerriwarrh Health Services - Melton","Echuca Regional Health","Goulburn Valley Health - Shepparton Campus","Geelong - Kardinia Health","Maryborough District Health Service","Monash Health - Clayton","Northeast Health Wangaratta","Northern Health - Northern Hospital","Peninsula Health - Frankston Hospital","Peninsula Health - Rosebud Hospital (Eleanora House)","Bass Coast Health - Phillip Island Health Hub","Portland District Health","Rosebud Respiratory Clinic","South West Healthcare - Warrnambool Campus","Stawell Regional Health Services","St Vincent's Hospital Melbourne","Sunshine Hospital","Alfred Health - The Alfred Hospital","The Royal Children's Hospital","Melbourne Health - The Royal Melbourne Hospital","Prahran Town Hall - Star Health","Laverton - CoHealth","Warragul respiratory clinic","Wimmera Health Care Group - Horsham","Western District Health Service - Hamilton","Dandenong drive-through centre","Port Melbourne Medical","Sale - Wellington Respiratory Clinic","Wonthaggi Respiratory Clinic","Wodonga Respiratory Clinic","Kyabram and District Health Service","Sunbury Respiratory Clinic","Collingwood - CoHealth","Footscray - CoHealth","West Melbourne - CoHealth","Kerang, Cohuna, Boort - Northern District Community Health","Ferntree Gully - EACH","Yarra Junction - EACH","Lilydale - EACH","Wyndham Vale -  IPC Health (drive through clinic)","Deer Park - IPC Health (drive through clinic)","ACL - Geelong","ACL - St Albans","ACL - Glen Waverley","ACL - Mornington","ACL - Traralgon","ACL - Mildura","ACL - Werribee","Dorevitch - Heidelberg","Dorevitch - Fawkner","Dorevitch - Altona","Dorevitch - Frankston","Dorevitch - Glenroy","Dorevitch - Ferntree Gully","4Cyte Pathology","4Cyte Pathology","4Cyte Pathology","4Cyte Pathology","4Cyte Pathology","4Cyte Pathology","4Cyte Pathology","4Cyte Pathology","4Cyte Pathology","4Cyte Pathology","Melbourne Pathology","Melbourne Pathology","Melbourne Pathology","Melbourne Pathology","First Peoples' Health and Wellbeing","Pacific Epping","Highpoint shopping Centre","Watergardens","Pacific Werribee","West Footscray Bunnings","Northland","Westfield Knox","Foster Respiratory Clinic","Barwon Health (Torquay Community Health Centre)","Mildura Central Car Park (Target Loading Dock)","Bairnsdale Regional Health Service","Bellarine","Colac Area Health","Morwell - The Healthcare Centre","Bairnsdale Respiratory Clinic","Shepparton Respiratory Clinic","Rowville Respiratory Clinic","Coolaroo","Daylesford - Central Highland\nRural Health","Swan Hill","Wallan","Keilor Community Hub","Latrobe Regional Hospital","Horsham Respiratory Clinic","Craigieburn Centre - Northern Health","Great Ocean Road Health - Lorne Community Hospital","Great Ocean Road Health - Otway Health","Melbourne Showgrounds","Braybrook Hub - CoHealth","Alpine Health - Falls Creek","Alpine Health - Mt Hotham","Mansfield District Hospital - Mt Buller","Broadmeadows Central","NCN Health - Cobram campus","NCN Health - Numurkah campus","Fawkner - Merri Health","Pakenham - IYU Recreation Reserve","Monash University - Frankston","Casey Fields","Chadstone Golfers Drive","Melbourne Sports and Aquatic Centre","Roxburgh Park Youth and Recreation Centre","NCN Health - Nathalia campus","The Kilmore and District Hospital","Bunnings Caroline Springs","Niddrie Community Hub – cohealth","Wingate Avenue Community Centre  - cohealth","Maribyrnong Community Centre - Western Health","Fairburn Park Pavilion (Ascot Vale) - Western Health","Flemington - St Brendan’s Catholic Church Hall","Oak Park Sports and Aquatic Centre","Meadow Heights Community Centre","Westfield Airport West","Melbourne Airport","Great South Coast (Warrnambool)","Seymour Health","Wootten Road Reserve Tarneit","Woodland Waters Reserve Mernda","Diamond Valley Sports and Fitness Centre (Greensborough)","Alexandra District Health","Springers Keysborough","Peninsula Health Mobile Service","Victorian Aboriginal Health Service","Yarrawonga Health","East Wimmera Health Service - Birchip campus","East Wimmera Health Service - Charlton campus","East Wimmera Health Service - Donald campus","East Wimmera Health Service - St Arnaud campus","East Wimmera Health Service - Wycheproof campus"],["GP Respiratory Clinic","GP Respiratory Clinic","GP Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","GP Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","GP Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","GP Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","GP Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","GP Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","GP Respiratory Clinic","GP Respiratory Clinic","GP Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Drive-through Testing Facility","GP Respiratory Clinic","GP Respiratory Clinic","GP Respiratory Clinic","GP Respiratory Clinic","Hospital Respiratory Clinic","Community Health Respiratory Clinic","Community Health Respiratory Clinic","Community Health Respiratory Clinic","Community Health Respiratory Clinic","Community Health Respiratory Clinic","Community Health Respiratory Clinic","Community Health Respiratory Clinic","Community Health Respiratory Clinic","Community Health Respiratory Clinic","Community Health Respiratory Clinic","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Pathology Collection Centre","Walk-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","GP Respiratory Clinic","Hospital Respiratory Clinic","Drive-through Testing Facility","Hospital Respiratory Clinic","GP Respiratory Clinic","Hospital Respiratory Clinic","GP Respiratory Clinic","GP Respiratory Clinic","GP Respiratory Clinic","GP Respiratory Clinic","GP Respiratory Clinic","Hospital Respiratory Clinic","GP Respiratory Clinic","GP Respiratory Clinic","Community Health Respiratory Clinic","Hospital Respiratory Clinic","GP Respiratory Clinic","Drive-through Testing Facility","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Drive-through Testing Facility","Community Health Respiratory Clinic","Walk-through Testing Facility","Walk-through Testing Facility","Walk-through Testing Facility","Drive-through Testing Facility","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Drive-through Testing Facility","Walk-through Testing Facility","Walk-through Testing Facility","Walk-through Testing Facility","Walk-through Testing Facility","Walk-through Testing Facility","Walk-through Testing Facility","Walk-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","GP Respiratory Clinic","Hospital Respiratory Clinic","Drive-through Testing Facility","Drive-through Testing Facility","Drive-through Testing Facility","Hospital Respiratory Clinic","Drive-through Testing Facility","Walk-through Testing Facility","GP Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic","Hospital Respiratory Clinic"],["https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.awh.org.au","https://www.austin.org.au","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.barwonhealth.org.au/","https://www.barwonhealth.org.au/","https://www.gha2.net.au/BCH","https://www.bendigohealth.com.au","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.benallahealth.org.au/","https://www.easternhealth.org.au","https://www.easternhealth.org.au","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://monashhealth.org/contact/casey-hospital/","http://www.kynetonhealth.org.au/coronavirus/","https://monashhealth.org/contact/casey-hospital/","https://www.djhs.org.au/find-us#c776","https://www.erh.org.au","https://gvhealth.org.au/about-us/locations-and-maps/goulburn-valley-health/","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","http://www.mdhs.vic.gov.au/","https://monashhealth.org/contact/monash-medical-centre/","https://www.northeasthealth.org.au/","https://www.nh.org.au","https://www.peninsulahealth.org.au","https://www.peninsulahealth.org.au","https://www.basscoasthealth.org.au/","https://pdh.net.au/novel-coronavirus-covid-19-information-page/","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.southwesthealthcare.com.au","https://srh.org.au/our-services/respiratory-assessment-clinic/","https://svhm.org.au/home","https://www.wh.org.au","https://www.alfred.org.au","https://www.rch.org.au","https://www.thermh.org.au/","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","http://www.whcg.org.au/","https://wdhs.net/latest-news/","https://greaterdandenong.com/document/30669/carroll-lane-car-park (","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-gp-respiratory-clinics","https://www.kyhealth.org.au/coronavirus",null,"https://www.cohealth.org.au/get-tested-for-coronavirus/","https://www.cohealth.org.au/get-tested-for-coronavirus/","https://www.cohealth.org.au/get-tested-for-coronavirus/","https://www.ndch.org.au/","https://www.each.com.au/coronavirus-covid-19-update/","https://www.each.com.au/coronavirus-covid-19-update/","https://www.each.com.au/coronavirus-covid-19-update/","https://bookings.nookal.com/bookings/company/NNRTG","https://bookings.nookal.com/bookings/company/NNRTG","https://www.clinicallabs.com.au/about-us/doctor-media-releases/novel-coronavirus-vic/","https://www.clinicallabs.com.au/about-us/doctor-media-releases/novel-coronavirus-vic/","https://www.clinicallabs.com.au/about-us/doctor-media-releases/novel-coronavirus-vic/","https://www.clinicallabs.com.au/about-us/doctor-media-releases/novel-coronavirus-vic/","https://www.clinicallabs.com.au/about-us/doctor-media-releases/novel-coronavirus-vic/","https://www.clinicallabs.com.au/about-us/doctor-media-releases/novel-coronavirus-vic/","https://www.clinicallabs.com.au/about-us/doctor-media-releases/novel-coronavirus-vic/",null,null,null,null,null,null,"covid19@4Cyte.com.au","covid19@4Cyte.com.au","covid19@4Cyte.com.au","covid19@4Cyte.com.au","covid19@4Cyte.com.au","covid19@4Cyte.com.au","covid19@4Cyte.com.au","covid19@4Cyte.com.au","covid19@4Cyte.com.au","covid19@4Cyte.com.au",null,null,null,null,"https://www.firstpeopleshealthandwellbeing.org.au/","https://www.dhhs.vic.gov.au/coronavirus","https://www.dhhs.vic.gov.au/coronavirus","https://www.dhhs.vic.gov.au/coronavirus","https://www.dhhs.vic.gov.au/coronavirus","https://www.dhhs.vic.gov.au/coronavirus","https://www.dhhs.vic.gov.au/coronavirus","https://www.dhhs.vic.gov.au/coronavirus","https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","https://www.dhhs.vic.gov.au/coronavirus","https://www.dhhs.vic.gov.au/coronavirus","https://www.dhhs.vic.gov.au/coronavirus","https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","https://www.cah.vic.gov.au/","https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","www.chrh.org.au","https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","https://www.brimbank.vic.gov.au/map/keilor-community-hub",null,"https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","https://www.nh.org.au/location/craigieburn/","https://www.greatoceanroadhealth.com.au/","https://www.greatoceanroadhealth.com.au/",null,"https://www.cohealth.org.au/get-tested-for-coronavirus/","https://www.alpinehealth.org.au/2020-ski-season\nhttps://www.fallscreek.com.au/medicalservices/","https://www.alpinehealth.org.au/2020-ski-season\nhttps://www.mthotham.com.au/discover/connect-with-us/latest-news/covid-19-update#98031-mt-hotham-alpine-resort-management-board\n",null,"https://www.dhhs.vic.gov.au/coronavirus",null,null,null,null,null,null,null,null,null,null,"http://www.kilmoredistricthospital.org.au/",null,null,null,null,null,null,null,null,null,null,"https://www.health.gov.au/initiatives-and-programs/coronavirus-covid-19-gp-respiratory-clinics","http://www.seymourhealth.org.au/index.php?page=COVID-19-Coronavirus",null,null,null,null,null,null,"https://www.vahs.org.au/","https://www.yh.org.au/COVID-19","www.ewhs.org.au","www.ewhs.org.au","www.ewhs.org.au","www.ewhs.org.au","www.ewhs.org.au"],[null,"1300 219 449",null,"02 60 584 444","please call (03) 9496 6606, prior to attending",null,"03 4215 4445","By appointment only 03 4215 4445","03 5671 3333","03 5454 6000",null,"Appointments necessary by phoning 03 5761 4284","1300 342 255","(03) 5962 4300",null,"9594 6666","By appointment 03 5422 9900","03 9554 1000","03 8746 1100","03 5485 5000","03 5832 2322",null,"By appointment 03 5461 0362","03 9594 6666","Please call 1800 324 942 prior to attending. ","03 8405 8000","03 9784 7777",null,"03 5951 2101","03 5521 0387",null,"03 5563 1666","5358 8630","03 9231 2211","03 8345 1730","03 9076 2000","03 9345 5522","03 9342 7000",null,null,null,"5262 2474","5551 8222","9594 6666",null,null,null,null,"58570212",null,"9448 5550","9448 5502","9448 5549","03 5451 0200","1300 219 449","1300 219 449","1300 219 449","9216 7758","9216 7758",null,null,null,null,null,null,null,null,"9359 9300","9398 5642","9781 4188","9306 1597","9753 6340","0434 877 962","0435 259 480","0434 904 454","0466 230 673","0466 922 268",null,null,null,null,null,"9287 7700","9287 7700","9783 6860","9287 7700","03 9070 8181",null,null,null,null,null,null,null,null,"Phone 4215 7815 before attending",null,"Please call 0417 021250 before attending",null,"52325402",null,null,null,null,null,"53216654",null,null,null,null,null,null,"52894300","52378500",null,"9368 2500","Booking required, please call (03) 5758 3238","Booking required, please call 03 5759 3551","Booking required, please call 03 5775 8800",null,"58710777","58620555",null,null,null,null,null,null,null,"58669444","Appointment required, please call 57342024",null,null,null,null,null,null,null,null,null,null,null,"Appointment required, please call 0436 345 573",null,null,null,"Call ahead 0418 589 131",null,null,"Appointment required, please call 0478 767 140","Appointment required, please call 03 5743 8132","Testing by appointment, 5477 7100","Testing by appointment, 5477 6800","Testing by appointment, 5478 6200","Testing by appointment, 5477 2100","Testing by appointment, 5478 0700"],[null,null,"Baby Change Facility | Disabled friendly toilet | Disabled Parking | Parking - free | Toilet | Wheelchair access | Wheelchair Accessible Parking","Drive thru, Disabled friendly toilet | Disabled Parking | Wheelchair access / No testing of children under 10 in Drive Thru - refer to testing available in AWH ED and at Commonwealth GP clinic",null,null,"Clinic and drive through clinic. Testing children over 3 months of age. Children of all ages can be tested at Commonwealth GP Clinics within Geelong region and Universty Hospital Geelong",null,"Drive through clinic | Accessible Telephones | Disabled friendly toilet | Disabled Parking | Parking - free | TTY facilities | Wheelchair access",null,null,null,"Entry to the Box Hill Hospital testing Clinic  is via the Hospital entry point at the corner of  Nelson Road and Arnold Street Box Hill",null,null,"Paediatric screening available",null,"Paediatric screening available",null,"Accessible Telephones | Disabled friendly toilet | Disabled Parking | Wheelchair access",null,null,null,"Paediatric screening available","Baby Change Facility | Braille signage | Cafeteria | Disabled friendly toilet | Disabled Parking | Parking - free | Public telephone | Toilet | Wheelchair access | Wheelchair Accessible Parking",null,null,null,null,null,null,null,null,"Accessible Telephones | Disabled friendly toilet | Disabled Parking | TTY facilities | Wheelchair access",null,"Cafeteria | Disabled friendly toilet | Parking - paid | Public telephone | Wheelchair access | Wheelchair Accessible Parking","COVID-19 testing only available for children under 18 years of age","Cafeteria | Parking - paid | Wheelchair access",null,null,null,"By appointment only. Call 5362 3473 between 10.00 - 17.00 to book.","Drive thru clinic","Drive through clinic - opening 12pm Monday 15 June.",null,null,null,null,null,null,null,null,null,null,null,null,null,"Drive through clinic","Drive through clinic","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Referral from GP required prior to attending pathology collection centre","Aboriginal and Torres Strait Islander people and their families, appointments only (online bookings available)","Located in the underground carpark opposite the Emergency Department","Located in the underground carpark off Rosamond Road. 2.3m max vehicle height",null,"\n","Enter carpark via main entrance","Located on the Target side of the shopping centre","Enter via Gate 5 on Burwood Hwy (Knox tavern entrance)",null,"Torquay Community Health Centre. Testing children over 5 years of age.  Children of all ages can be tested at Commonwealth GP Clinics within Geelong region and Universty Hospital Geelong","Regional Mobile drive-through clinics will provide testing for people with symptoms.","Drive-through clinic at hospital.",null,null,null,null,null,null,null,null,null,null,null,null,null,"Drive through only",null,null,"Drive through only","Entrance is via the Sports Pavillion near Skinner Reserve","Close to the bottom of Gully Chairlift","Corral Carpark","Benalla Ski Club","North Car Park (Corner of Pascoe Vale Road and Coleraine Street) entry via Pascoe Vale Road",null,null,"Drive through only.","Drive through only.",null,null,"Drive through only - When busy, MSAC is an alternative site","Drive through only","Drive through only",null,null,"Drive through only",null,null,null,null,null,null,null,"Drive through only","Drive through only",null,null,null,null,null,null,"Drive through only","Mobile service - future locations to be provided","Aboriginal and Torres Strait Islander people and their families, appointments only","The testing site is adjacent to the Acute entrance off Lynch street",null,null,null,null,null],[null,"Weekday: 8.30 - 16.00",null,"By appointment only","Weekday: 08:00 - 20:00\nWeekend:, Public Holidays 08.00 - 17.00",null,"Clinic:  Daily 08.30 - 16.00\nDrive through:  Daily 10.00-15.30","Weekday: 10.00 - 18.00\nWeekend: 10.00 - 18.00","Weekday: 09:00 - 17:00\nWeekend: 09:00 - 17:00","Weekday: 10.00 - 17.30\nWeekend: 10.00 - 17.30",null,"Weekday: 13.30 - 15.30","Weekday: 8:00 - 18:00\nWeekend: 8:00 - 18:00","\nDaily: 9:30 - 16:30",null,"Weekday: 09:00 - 16.00\nWeekend: 09:00 - 16.00","Weekday: 08:00 - 16.30\nWeekend: 08:00 - 16.30","Weekday: 09:00 - 16.00\nWeekend: 09:00 - 16.00","Weekday: 10:30am - 18.00\nWeekend: 9:00am - 12.00\nPublic Holidays: 9:00am - 12.00","Weekday: 09.00-17.00\n Weekend: 09.00-17.00\n","Weekday: 09.00-17.00\n Weekend: 09.00-17.00\n",null,"Weekday: 09.00 - 17.30","Weekday: 09:00 - 16.00\nWeekend: 09:00 - 16.00","Monday - Friday 08.30 - 17.30","Weekday: 08:30 - 20.30\nWeekend: 08:30 - 20.30","Weekday: 9:00 - 20:00\n Weekend: 9:00 - 20:00\n","Weekday: 9:00- 17:00\nWeekend: 9:00 - 17:00\n","Weekday: 09.00-17.00\n Weekend: 09.00-17.00","Weekday: 09.00 - 17.00\nWeekends: 10.00 - 14.00","Weekday: 09.00 - 17.00\n","Weekday: 0800-1600\n Saturday: 0800-1600\n Sunday: Closed","Weekday: 08.30 - 17.00","Weekday: 08:00 - 20:00; for children 12 years and over only","Weekday: 10:00 - 18:30\nWeekends: 10:00 - 18:30","Weekday: 08:00 - 18:00\nWeekend: 08:00 - 18:00","For children under 18 only. 9 am - 5 pm daily","Weekday: 07.00 - 21.00\nWeekend: 07.00 - 21.00\n",null,null,"Weekday: 09.30 - 16.30","Weekday: 11.00 - 17.00\nWeekend: 11.00 - 17.00","Weekday: 13.00 - 15.00\nSaturday: 10.00 - 14.00\n","Weekday: 09:00 - 16.00\nWeekend: 09.00 - 16.00","Weekday: 09:00 - 18:00\nSaturday: 8:30 -14:00\nSunday: 9:00-13:00","Weekday: 09.30 - 13.00 and 14.00 - 17.30","Weekday: 09.00 - 13.00 and 14.00 - 18.00",null,"Weekday: 12.00 - 16.00\nSaturday: 13.30 - 15.30","Weekday: 10.00 - 16.00","Weekday: 09.30 - 12.30 and 13.30-16.30","Weekday: 09.30 - 12.30 and 13.30-16.30","Weekdays: 9.30 - 16.30","Weekdays: 09.00 - 12.00\nand 14.00 - 16.00","Weekdays 09.00-15.00","Weekdays 09.00-15.00\n","Weekdays 09.00-15.00","Weekdays: 09.00 -17.00","Weekdays: 09.00 -16.30\n","Weekday: 07.30 - 15.30\n","Weekday: 08.00 - 16.00","Weekday: 07.30 - 15.30\n","Weekday: 08.30 - 17.00","Weekday: 07.30 - 15.30\n","Weekday: 8.00 - 15.00","Mon-Fri 8.00 – 15.00 (closed 12.00 – 12.30)\n\n","Weekday: 08.30 - 15.00","Weekday: 08.00 - 13.00","Weekday: 07.30 - 16.00","Weekday: 08.00 - 12.00","Weekday: 08.30 - 15.00\nSaturday: 07.30 - 14.00","Weekday: 09.00 - 17.00","Weekday: 08.00 - 17.00\nSaturday: 09.00 - 17.00\nSunday: 09.00 - 17.00","Weekday: 08.00 - 17.00\nSaturday: 10.00 - 14.00\nSunday: 10.00 - 14.00","Weekday: 08.00 - 17.00\nSaturday: 10.00 - 17.00\nSunday: 10.00 - 17.00","Weekday: 09.00 - 17.00\nSaturday: 10.00 - 14.00\nSunday: 10.00 - 14.00","Weekdays: 9.00 - 17.00","Weekdays: 08.00 - 17.00\nSaturday: 11.00 - 14.00","Weekdays: 08.00 - 17.00\nSaturday: 11.00 - 14.00",null,null,null,"Weekday: 08.30 - 16.30","Weekday: 08.30 - 16.30","Weekday: 08.30 - 16.30","Weekday: 08.30 - 16.30","Mon-Thu: 09.00 - 17.00\nFriday: 09.00 - 13.00","9am - 5pm, 7 days","9am - 5pm, 7 days","9am - 5pm, 7 days","Weekdays only: 9am-5pm; closed on weekends","9am - 5pm, 7 days","9am - 5pm, 7 days","9am - 5pm, 7 days","Weekday: 09.30 - 17.00","Daily: 09.00 – 17.30","\nWeekdays: 9.30 - 12.00pm","Weekend: 09.00 - 17.00","Weekdays: 8.30 - 12.00","Weekday: 09.00 - 17.00\nWeekend: 09.00 - 17.00",null,null,null,null,null,"Weekday: 09.30 - 16.00",null,null,"Weekday: 10.00 - 16.00\nWeekend: 10.00 - 16.00","Weekday: 09.00 - 17.00\nWeekend: 09.00 - 17.00",null,"Weekday: 09.00 - 16.00\nWeekend: 09.00 - 16.00","9am - 4pm, 7 days","9am - 4pm, 7 days","9am - 5pm, 7 days","Weekday: 09.30 - 16.00","11am - 12pm","11am - 12pm","8.30am - 1.30pm","Daily: 9am-5pm","13.30-15.30, Monday - Friday","13.30-15.30, Monday - Friday","\n10am-4pm, 7 days","Weekday: 09:00 - 16.00\nWeekend: 09.00 - 16.00","8.30am-4.00pm, 7 days","Weekday: 09:00 - 16.00\nWeekend: 09.00 - 16.00","9am - 5pm, 7 days","9am - 5pm, 7 days","\n9am - 5pm, 7 days","10.00-12.00, Monday - Friday","\n8am-5pm, 7 days","9am - 5pm, 7 days","9.30am - 4.30pm, Mon-Sat","\n9.30am - 4.30pm, Mon-Sat","10am-4pm, 7 days","10am-4pm, 7 days","10am-4pm 7 days","9.30am-4.30pm 7 days","9.30am-4.30pm 7 days","9am - 5pm, 7 days","9am - 5pm, 7 days",null,"9am - 3pm, 7 days","10am-4pm, 7 days","9.30-4.30, 7 days","9am-4pm, 7 days","24-Jul","9am - 5pm, 7 days","\nTue 14 July, 8.30am-4pm\nWed 15 July, 8.30am-4pm","10am -12:30pm and 1:30pm - 4pm, Monday - Friday","12.30pm - 4.00pm,  7 days","24/7 screening, testing by appointment","24/7 screening, testing by appointment","24/7 screening, testing by appointment","24/7 screening, testing by appointment","24/7 screening, testing by appointment"],[null,null,null,"69 Vermont Street","145 Studley Road",null,"Corner of Cox Road and Princes Highway","Barwon Health - University Hospital Geelong","235 Graham Street","100 Barnard Street (located in Stewart Street Bendigo, the old Emergency Department)",null,"Samaria Road","8 Arnold Street (Enter via the Hospital entry point at the corner of\n Nelson Rd and Arnold St)","Senior Citizens Building, Corner Green and River streets",null,"7 Gibb St","7-25 Caroline Chisholm Dr","169 Cleeland St","195-209 Barries Road","226 Service Street","2 Graham Street",null,"75-87 Clarendon Street","239 Clayton Road","Norton Street","185 Cooper Street","2 Hastings Road","1527 Point Nepean Rd","50 Church Street","141-151 Bentinck St",null,"33 Ryot Street","27-29 Sloane Street","41 Victoria Parade","176 Furlong Road","55 Commercial Road","50 Flemington Road","300 Grattan Street",null,null,null,"83 Baillie St","20 Foster St","Carroll Lane Car park\n(off Cheltenham Road), Dandenong",null,null,null,null,"88 Fenaughty St","29 Timins St","365 Hoddle St","575A Barkley St","98 Abbotsford Street","24 Fitzroy Street","72 Francis Crescent","2468 Warburton Highway","18-22 Lakeview Drive","510 Ballan St","106 Station Rd","73-79 Little Ryrie St","309 Main Rd E","274 Springvale Rd","127 Tanti Rd","10-12 Grey St","152 Lime Avenue","19 Princes Highway","18 Banksia St","107 Jukes Rd","99 Pier Street","34 Willis St","127 Wheatsheaf Rd","1 Mountain Gate Drive","6 Landale Street","52 Childs Rd","14 Hertford Road","154 Cleeland St","1A Vera St","46 Bellarine Highway","106 Heaths Rd","455 Upper Heidelberg Rd","29 Rattray Rd","321 Mt Dandenong Rd","70 Alfred St","159 Jasper St","28 Cranbourne Rd","28 Stations St","317-319 High Street","Epping plaza shopping centre,571-583 High St","120-200 Rosamond Road","145/399 Melton Hwy","250 Heaths Rd","Princes Hwy Service Rd","2-50 Murray Rd","425 Burwood Hwy",null,"100 Surf Coast Hwy","Fifteenth Street","122 Day Street","27 Guthridge st","2-28 Connor St",null,null,null,null,null,"13 Hospital Street",null,null,"704B Old Calder Highway","10 Village Avenue",null,"274-304 Craigieburn Rd","1 Albert Street","75 McLachlan Street\r\n","Melbourne Showgrounds, Gate 4 off Langs Rd - Left hand turn only","107 - 139 Churchill Ave   (Entrance via Sports Pavillion near Skinner Reserve)","Bogong High Plains Road","Corral Carpark, Great Alpine Road","14 Chamois Road","1099-1169 Pascoe Vale Rd","24-32 Broadway Street","2 Katamatite Road","CB Smith Reserve, 79 Jukes Rd","165 Henry Rd","Moorooduc Hwy","160 Berwick-Cranbourne Road","Gate 4, Golfers Drive, Multi deck carpark level 2","30 Aughtie Drive. Enter from Old Aughtie Drive (Rear Carpark)","75 Lakeside Drive","36-44 McDonell St","1 Anderson Road","1067/1125 Western Hwy","3/3-15 Matthews Ave","13A Wingate Ave","9 Randall Street","Newsom Street &amp;, Woods St","103 Wellington St","563a Pascoe Vale Rd","15/29 Buchan St","Entry 6 (via Moore Rd), 29/35 Louis St","Terminal 4 Level 2",null,"1 Bretonneux St","Wootten Road Reserve, 25/51 Wootten Rd","Woodland Waters Reserve, Waterview Drive","44 Civic Drive","12 Cooper Street","Springers Leisure Centre, 400 Cheltenham Road","Hastings Community Health Centre car park - 185 High Stree","186 Nicholson Street","33 Piper Street","26 Duncan St","4 Learmonth St","Aitken Avenue","52 North Western Road","19 Grandview St"],["ALTONA NORTH","RINGWOOD","MILDURA","WODONGA","HEIDELBERG","LUCAS","NORLANE","GEELONG","WONTHAGGI","BENDIGO","SPRING GULLY","BENALLA","BOX HILL","HEALESVILLE","CARRUM DOWNS","BERWICK","KYNETON","DANDENONG","MELTON","ECHUCA","SHEPPARTON","BELMONT","MARYBOROUGH","CLAYTON","WANGARATTA","EPPING","FRANKSTON","CAPEL SOUND","COWES","PORTLAND","ROSEBUD","WARRNAMBOOL","STAWELL","FITZROY","ST ALBANS","MELBOURNE","PARKVILLE","PARKVILLE","PRAHRAN","LAVERTON","WARRAGUL","HORSHAM","HAMILTON","DANDENONG","PORT MELBOURNE","SALE","WONTHAGGI","WODONGA","KYABRAM","SUNBURY","COLLINGWOOD","WEST FOOTSCRAY","WEST MELBOURNE","KERANG","FERNTREE GULLY","YARRA JUNCTION","LILYDALE","WYNDHAM VALE","DEER PARK","GEELONG","ST ALBANS","GLEN WAVERLEY","MORNINGTON","TRARALGON","MILDURA","WERRIBEE","HEIDELBERG","FAWKNER","ALTONA","FRANKSTON","GLENROY","FERNTREE GULLY","BOX HILL","EPPING","SUNSHINE","DANDENONG","FRANKSTON","NEWCOMB","HOPPERS CROSSING","HEIDELBERG HEIGHTS","MONTMORENCY","CROYDON","NORTH MELBOURNE","BENTLEIGH","FRANKSTON","FERNTREE GULLY","THOMASTOWN","EPPING","MARIBYRNONG","TAYLORS LAKES","HOPPERS CROSSING","WEST FOOTSCRAY","PRESTON","WANTIRNA SOUTH","FOSTER","TORQUAY","MILDURA","BAIRNSDALE","OCEAN GROVE","COLAC","MORWELL","BAIRNSDALE","SHEPPARTON","ROWVILLE","COOLAROO","DAYLESFORD","SWAN HILL","WALLAN","KEILOR","TRARALGON","HORSHAM","CRAIGIEBURN","LORNE","APOLLO BAY","ASCOT VALE","BRAYBROOK","FALLS CREEK","MOUNT HOTHAM","MOUNT BULLER","BROADMEADOWS","COBRAM","NUMURKAH","FAWKNER","PAKENHAM","FRANKSTON","CRANBOURNE EAST","MALVERN EAST","ALBERT PARK","ROXBURGH PARK","NATHALIA","KILMORE","CAROLINE SPRINGS","Niddrie","Ascot Vale","Maribyrnong","Ascot Vale","Flemington","Pascoe Vale","Meadow Heights","Airport West","Melbourne Airport","Warrnambool","Seymour","Tarneit","Mernda","Greensborough","Alexandra","Keysborough","Hastings","Fitzroy","Yarrawonga","Birchip","Charlton","Donald","St Arnaud","Wycheproof"],["VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","ViC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC"],[3025,3134,3500,3690,3084,3350,3214,3220,3995,3550,3550,3672,3128,3777,3201,3806,3444,3175,3337,3564,3630,3216,3465,3168,3677,3076,3199,3940,3922,3305,3939,3280,3380,3065,3021,3004,3052,3052,3181,3028,3820,3400,3300,3175,3207,3850,3995,3690,3619,3429,3066,3011,3003,3579,3156,3797,3140,3024,3023,3220,3021,3150,3931,3844,3500,3030,3084,3060,3018,3199,3046,3156,3128,3076,3020,3175,3199,3219,3029,3081,3094,3136,3051,3204,3199,3156,3074,3076,3032,3038,3029,3012,3072,3152,3960,3228,3500,3875,3226,3250,3840,3875,3630,3178,3048,3460,3585,3756,3036,3844,3400,3064,3232,3233,3032,3019,3699,3741,3723,3047,3644,3636,3060,3810,3199,3977,3145,3206,3064,3638,3764,3023,3042,3032,3032,3032,3031,3046,3068,3042,3045,null,3660,3029,3754,3088,3714,3173,3915,3065,3730,3483,3525,3480,3478,3528],["Hobsons Bay City","Maroondah City","Mildura Rural City","Wodonga City","Banyule City","Ballarat City","Greater Geelong City","Greater Geelong City","Bass Coast Shire","Greater Bendigo City","Mount Alexander Shire","Benalla Rural City","Whitehorse City","Yarra Ranges Shire","Frankston City","City of Casey","Macedon Ranges Shire","Greater Dandenong City","Melton City","Campaspe Shire","Greater Shepparton City","Greater Geelong City","Central Goldfields Shire","Monash City","Wangaratta Rural City","Whittlesea City","Frankston City","Shire of Mornington Peninsula","Bass Coast Shire","Glenelg Shire","Shire of Mornington Peninsula","Warrnambool City","Northern Grampians Shire","City of Yarra","Brimbank City","Melbourne City","Melbourne City","Melbourne City","Stonnington City","Hobsons Bay City","Baw Baw Shire","Horsham Rural City","Southern Grampians Shire","Greater Dandenong City","Port Phillip City","Wellington Shire","Bass Coast Shire","Wodonga City","Campaspe Shire","City of Hume","City of Yarra","City of Maribyrnong","Melbourne City","Gannawarra Shire","City of Knox","Yarra Ranges Shire","Yarra Ranges Shire","City of Wyndham","Brimbank City","Greater Geelong City","Brimbank City","Monash City","Shire of Mornington Peninsula","Latrobe City","Mildura Rural City","City of Wyndham","Banyule City","Moreland City","Hobsons Bay City","Frankston City","Moreland City","City of Knox","City of Knox","Whittlesea City","Brimbank City","Greater Dandenong City","Frankston City","Greater Geelong City","City of Wyndham","Banyule City","Banyule City","Maroondah City","Melbourne City","Glen Eira City","Frankston City","City of Knox","Whittlesea City","Whittlesea City","City of Maribyrnong","Brimbank City","City of Wyndham","City of Maribyrnong","Darebin City","City of Knox","South Gippsland Shire","Surf Coast Shire","Mildura Rural City","East Gippsland Shire","Greater Geelong City","Colac Otway Shire","Latrobe City","East Gippsland Shire","Greater Shepparton City","City of Knox","City of Hume","Hepburn Shire","Swan Hill Rural City","Mitchell Shire","Brimbank City","Latrobe City","Horsham Rural City","City of Hume","Surf Coast Shire","Colac Otway Shire","Melbourne City","City of Maribyrnong","Falls Creek Alpine Resort (Unincorporated)","Mount Hotham Alpine Resort (Unincorporated)","Mount Buller Alpine Resort (Unincorporated)","City of Hume","Moira Shire","Moira Shire","City of Hume","Shire of Cardinia","Frankston City","City of Casey","Stonnington City","Port Phillip City","Hume City Council","Moira Shire","Mitchell Shire","Melton City","Melton City","Moonee Valley City","City of Maribyrnong","Moonee Valley City","Moonee Valley City","Moreland City","City of Hume","Moonee Valley City","City of Hume","Warrnambool City","Mitchell Shire","City of Wyndham","Whittlesea City","Nillumbik Shire","Murrindindi Shire","Greater Dandenong City","Shire of Mornington Peninsula","City of Yarra","Moira Shire","Buloke Shire","Buloke Shire","Buloke Shire","Northern Grampians Shire","Buloke Shire"],["No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","20 minutes","10 minutes","10 minutes","20 minutes","0 minutes","60 minutes","35 minutes","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","13 minutes","No estimated wait time available","120 minutes","60 minutes","1 minutes","No estimated wait time available","No estimated wait time available","5 minutes","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","2 minutes","0 minutes","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","90 minutes","No estimated wait time available","20 minutes","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available","No estimated wait time available"],["Altona North Medical Group  ALTONA NORTH VIC 3025","Ringwood - EACH  RINGWOOD VIC 3134","Mildura - Sunraysia Community Health  MILDURA VIC 3500","Albury Wodonga Health - Wodonga Campus 69 Vermont Street WODONGA VIC 3690","Austin Health - Austin Hospital 145 Studley Road HEIDELBERG VIC 3084","Ballarat Respiratory Clinic  LUCAS VIC 3350","Barwon Health - North Geelong (Clinic and drive through clinic) Corner of Cox Road and Princes Highway NORLANE VIC 3214","Barwon Health - University Hospital Geelong Barwon Health - University Hospital Geelong GEELONG VIC 3220","Bass Coast Health - Wonthaggi Hospital 235 Graham Street WONTHAGGI VIC 3995","Bendigo Health 100 Barnard Street (located in Stewart Street Bendigo, the old Emergency Department) BENDIGO VIC 3550","Bendigo Respiratory Clinic - Spring Gully Primary Health  SPRING GULLY VIC 3550","Benalla Health Samaria Road BENALLA VIC 3672","Eastern Health - Box Hill Hospital 8 Arnold Street (Enter via the Hospital entry point at the corner of\n Nelson Rd and Arnold St) BOX HILL VIC 3128","Eastern Health - Healesville (Senior Citizens Building) Senior Citizens Building, Corner Green and River streets HEALESVILLE VIC 3777","Carrum Downs Respiratory Clinic  CARRUM DOWNS VIC 3201","Monash Health - Berwick 7 Gibb St BERWICK VIC 3806","Kyneton Health - Central Highlands Rural Health 7-25 Caroline Chisholm Dr KYNETON VIC 3444","Monash Health - Dandenong 169 Cleeland St DANDENONG VIC 3175","Djerriwarrh Health Services - Melton 195-209 Barries Road MELTON VIC 3337","Echuca Regional Health 226 Service Street ECHUCA VIC 3564","Goulburn Valley Health - Shepparton Campus 2 Graham Street SHEPPARTON VIC 3630","Geelong - Kardinia Health  BELMONT VIC 3216","Maryborough District Health Service 75-87 Clarendon Street MARYBOROUGH VIC 3465","Monash Health - Clayton 239 Clayton Road CLAYTON VIC 3168","Northeast Health Wangaratta Norton Street WANGARATTA VIC 3677","Northern Health - Northern Hospital 185 Cooper Street EPPING VIC 3076","Peninsula Health - Frankston Hospital 2 Hastings Road FRANKSTON VIC 3199","Peninsula Health - Rosebud Hospital (Eleanora House) 1527 Point Nepean Rd CAPEL SOUND VIC 3940","Bass Coast Health - Phillip Island Health Hub 50 Church Street COWES VIC 3922","Portland District Health 141-151 Bentinck St PORTLAND VIC 3305","Rosebud Respiratory Clinic  ROSEBUD VIC 3939","South West Healthcare - Warrnambool Campus 33 Ryot Street WARRNAMBOOL VIC 3280","Stawell Regional Health Services 27-29 Sloane Street STAWELL VIC 3380","St Vincent's Hospital Melbourne 41 Victoria Parade FITZROY VIC 3065","Sunshine Hospital 176 Furlong Road ST ALBANS VIC 3021","Alfred Health - The Alfred Hospital 55 Commercial Road MELBOURNE VIC 3004","The Royal Children's Hospital 50 Flemington Road PARKVILLE VIC 3052","Melbourne Health - The Royal Melbourne Hospital 300 Grattan Street PARKVILLE VIC 3052","Prahran Town Hall - Star Health  PRAHRAN VIC 3181","Laverton - CoHealth  LAVERTON VIC 3028","Warragul respiratory clinic  WARRAGUL VIC 3820","Wimmera Health Care Group - Horsham 83 Baillie St HORSHAM VIC 3400","Western District Health Service - Hamilton 20 Foster St HAMILTON VIC 3300","Dandenong drive-through centre Carroll Lane Car park\n(off Cheltenham Road), Dandenong DANDENONG VIC 3175","Port Melbourne Medical  PORT MELBOURNE VIC 3207","Sale - Wellington Respiratory Clinic  SALE VIC 3850","Wonthaggi Respiratory Clinic  WONTHAGGI VIC 3995","Wodonga Respiratory Clinic  WODONGA VIC 3690","Kyabram and District Health Service 88 Fenaughty St KYABRAM VIC 3619","Sunbury Respiratory Clinic 29 Timins St SUNBURY VIC 3429","Collingwood - CoHealth 365 Hoddle St COLLINGWOOD VIC 3066","Footscray - CoHealth 575A Barkley St WEST FOOTSCRAY VIC 3011","West Melbourne - CoHealth 98 Abbotsford Street WEST MELBOURNE VIC 3003","Kerang, Cohuna, Boort - Northern District Community Health 24 Fitzroy Street KERANG VIC 3579","Ferntree Gully - EACH 72 Francis Crescent FERNTREE GULLY VIC 3156","Yarra Junction - EACH 2468 Warburton Highway YARRA JUNCTION VIC 3797","Lilydale - EACH 18-22 Lakeview Drive LILYDALE VIC 3140","Wyndham Vale -  IPC Health (drive through clinic) 510 Ballan St WYNDHAM VALE VIC 3024","Deer Park - IPC Health (drive through clinic) 106 Station Rd DEER PARK VIC 3023","ACL - Geelong 73-79 Little Ryrie St GEELONG VIC 3220","ACL - St Albans 309 Main Rd E ST ALBANS VIC 3021","ACL - Glen Waverley 274 Springvale Rd GLEN WAVERLEY VIC 3150","ACL - Mornington 127 Tanti Rd MORNINGTON VIC 3931","ACL - Traralgon 10-12 Grey St TRARALGON VIC 3844","ACL - Mildura 152 Lime Avenue MILDURA VIC 3500","ACL - Werribee 19 Princes Highway WERRIBEE VIC 3030","Dorevitch - Heidelberg 18 Banksia St HEIDELBERG VIC 3084","Dorevitch - Fawkner 107 Jukes Rd FAWKNER VIC 3060","Dorevitch - Altona 99 Pier Street ALTONA VIC 3018","Dorevitch - Frankston 34 Willis St FRANKSTON VIC 3199","Dorevitch - Glenroy 127 Wheatsheaf Rd GLENROY VIC 3046","Dorevitch - Ferntree Gully 1 Mountain Gate Drive FERNTREE GULLY VIC 3156","4Cyte Pathology 6 Landale Street BOX HILL VIC 3128","4Cyte Pathology 52 Childs Rd EPPING VIC 3076","4Cyte Pathology 14 Hertford Road SUNSHINE VIC 3020","4Cyte Pathology 154 Cleeland St DANDENONG VIC 3175","4Cyte Pathology 1A Vera St FRANKSTON VIC 3199","4Cyte Pathology 46 Bellarine Highway NEWCOMB VIC 3219","4Cyte Pathology 106 Heaths Rd HOPPERS CROSSING VIC 3029","4Cyte Pathology 455 Upper Heidelberg Rd HEIDELBERG HEIGHTS VIC 3081","4Cyte Pathology 29 Rattray Rd MONTMORENCY VIC 3094","4Cyte Pathology 321 Mt Dandenong Rd CROYDON VIC 3136","Melbourne Pathology 70 Alfred St NORTH MELBOURNE VIC 3051","Melbourne Pathology 159 Jasper St BENTLEIGH VIC 3204","Melbourne Pathology 28 Cranbourne Rd FRANKSTON VIC 3199","Melbourne Pathology 28 Stations St FERNTREE GULLY VIC 3156","First Peoples' Health and Wellbeing 317-319 High Street THOMASTOWN VIC 3074","Pacific Epping Epping plaza shopping centre,571-583 High St EPPING VIC 3076","Highpoint shopping Centre 120-200 Rosamond Road MARIBYRNONG VIC 3032","Watergardens 145/399 Melton Hwy TAYLORS LAKES VIC 3038","Pacific Werribee 250 Heaths Rd HOPPERS CROSSING VIC 3029","West Footscray Bunnings Princes Hwy Service Rd WEST FOOTSCRAY VIC 3012","Northland 2-50 Murray Rd PRESTON VIC 3072","Westfield Knox 425 Burwood Hwy WANTIRNA SOUTH ViC 3152","Foster Respiratory Clinic  FOSTER VIC 3960","Barwon Health (Torquay Community Health Centre) 100 Surf Coast Hwy TORQUAY VIC 3228","Mildura Central Car Park (Target Loading Dock) Fifteenth Street MILDURA VIC 3500","Bairnsdale Regional Health Service 122 Day Street BAIRNSDALE VIC 3875","Bellarine 27 Guthridge st OCEAN GROVE VIC 3226","Colac Area Health 2-28 Connor St COLAC VIC 3250","Morwell - The Healthcare Centre  MORWELL VIC 3840","Bairnsdale Respiratory Clinic  BAIRNSDALE VIC 3875","Shepparton Respiratory Clinic  SHEPPARTON VIC 3630","Rowville Respiratory Clinic  ROWVILLE VIC 3178","Coolaroo  COOLAROO VIC 3048","Daylesford - Central Highland\nRural Health 13 Hospital Street DAYLESFORD VIC 3460","Swan Hill  SWAN HILL VIC 3585","Wallan  WALLAN VIC 3756","Keilor Community Hub 704B Old Calder Highway KEILOR VIC 3036","Latrobe Regional Hospital 10 Village Avenue TRARALGON VIC 3844","Horsham Respiratory Clinic  HORSHAM VIC 3400","Craigieburn Centre - Northern Health 274-304 Craigieburn Rd CRAIGIEBURN VIC 3064","Great Ocean Road Health - Lorne Community Hospital 1 Albert Street LORNE VIC 3232","Great Ocean Road Health - Otway Health 75 McLachlan Street\r\n APOLLO BAY VIC 3233","Melbourne Showgrounds Melbourne Showgrounds, Gate 4 off Langs Rd - Left hand turn only ASCOT VALE VIC 3032","Braybrook Hub - CoHealth 107 - 139 Churchill Ave   (Entrance via Sports Pavillion near Skinner Reserve) BRAYBROOK VIC 3019","Alpine Health - Falls Creek Bogong High Plains Road FALLS CREEK VIC 3699","Alpine Health - Mt Hotham Corral Carpark, Great Alpine Road MOUNT HOTHAM VIC 3741","Mansfield District Hospital - Mt Buller 14 Chamois Road MOUNT BULLER VIC 3723","Broadmeadows Central 1099-1169 Pascoe Vale Rd BROADMEADOWS VIC 3047","NCN Health - Cobram campus 24-32 Broadway Street COBRAM VIC 3644","NCN Health - Numurkah campus 2 Katamatite Road NUMURKAH VIC 3636","Fawkner - Merri Health CB Smith Reserve, 79 Jukes Rd FAWKNER VIC 3060","Pakenham - IYU Recreation Reserve 165 Henry Rd PAKENHAM VIC 3810","Monash University - Frankston Moorooduc Hwy FRANKSTON VIC 3199","Casey Fields 160 Berwick-Cranbourne Road CRANBOURNE EAST VIC 3977","Chadstone Golfers Drive Gate 4, Golfers Drive, Multi deck carpark level 2 MALVERN EAST VIC 3145","Melbourne Sports and Aquatic Centre 30 Aughtie Drive. Enter from Old Aughtie Drive (Rear Carpark) ALBERT PARK VIC 3206","Roxburgh Park Youth and Recreation Centre 75 Lakeside Drive ROXBURGH PARK VIC 3064","NCN Health - Nathalia campus 36-44 McDonell St NATHALIA VIC 3638","The Kilmore and District Hospital 1 Anderson Road KILMORE VIC 3764","Bunnings Caroline Springs 1067/1125 Western Hwy CAROLINE SPRINGS VIC 3023","Niddrie Community Hub – cohealth 3/3-15 Matthews Ave Niddrie VIC 3042","Wingate Avenue Community Centre  - cohealth 13A Wingate Ave Ascot Vale VIC 3032","Maribyrnong Community Centre - Western Health 9 Randall Street Maribyrnong VIC 3032","Fairburn Park Pavilion (Ascot Vale) - Western Health Newsom Street &amp;, Woods St Ascot Vale VIC 3032","Flemington - St Brendan’s Catholic Church Hall 103 Wellington St Flemington VIC 3031","Oak Park Sports and Aquatic Centre 563a Pascoe Vale Rd Pascoe Vale VIC 3046","Meadow Heights Community Centre 15/29 Buchan St Meadow Heights VIC 3068","Westfield Airport West Entry 6 (via Moore Rd), 29/35 Louis St Airport West VIC 3042","Melbourne Airport Terminal 4 Level 2 Melbourne Airport VIC 3045","Great South Coast (Warrnambool)  Warrnambool VIC","Seymour Health 1 Bretonneux St Seymour VIC 3660","Wootten Road Reserve Tarneit Wootten Road Reserve, 25/51 Wootten Rd Tarneit VIC 3029","Woodland Waters Reserve Mernda Woodland Waters Reserve, Waterview Drive Mernda VIC 3754","Diamond Valley Sports and Fitness Centre (Greensborough) 44 Civic Drive Greensborough VIC 3088","Alexandra District Health 12 Cooper Street Alexandra VIC 3714","Springers Keysborough Springers Leisure Centre, 400 Cheltenham Road Keysborough VIC 3173","Peninsula Health Mobile Service Hastings Community Health Centre car park - 185 High Stree Hastings VIC 3915","Victorian Aboriginal Health Service 186 Nicholson Street Fitzroy VIC 3065","Yarrawonga Health 33 Piper Street Yarrawonga VIC 3730","East Wimmera Health Service - Birchip campus 26 Duncan St Birchip VIC 3483","East Wimmera Health Service - Charlton campus 4 Learmonth St Charlton VIC 3525","East Wimmera Health Service - Donald campus Aitken Avenue Donald VIC 3480","East Wimmera Health Service - St Arnaud campus 52 North Western Road St Arnaud VIC 3478","East Wimmera Health Service - Wycheproof campus 19 Grandview St Wycheproof VIC 3528"],["Suite 1, Circle Health Building, Unit 6/230 Blackshaws Rd, Altona North VIC 3025, Australia","46 Warrandyte Rd, Ringwood VIC 3134, Australia","137 Thirteenth St, Mildura VIC 3500, Australia","53-81 Vermont St, Wodonga VIC 3690, Australia","145 Studley Rd, Heidelberg VIC 3084, Australia","15 Errard St N, Ballarat Central VIC 3350, Australia","155 Princes Hwy, Norlane VIC 3214, Australia","Bellerine St, Geelong VIC 3220, Australia","235 Graham St, Wonthaggi VIC 3995, Australia","100 Barnard St, Bendigo VIC 3550, Australia",null,"45-63 Coster St, Benalla VIC 3672, Australia","8 Arnold St, Box Hill VIC 3128, Australia","Healesville VIC 3777, Australia","113b Hall Rd, Carrum Downs VIC 3201, Australia","62-70 Kangan Dr, Berwick VIC 3806, Australia","7-25 Caroline Chisholm Dr, Kyneton VIC 3444, Australia","126/128 Cleeland St, Dandenong VIC 3175, Australia","195-209 Barries Rd, Melton West VIC 3337, Australia","226 Service St, Echuca VIC 3564, Australia","2/2-48 Graham St, Shepparton VIC 3630, Australia","2/18 Colac Rd, Belmont VIC 3216, Australia","75/87 Clarendon St, Maryborough VIC 3465, Australia","239 Clayton Rd, Clayton VIC 3168, Australia","35-47 Green St, Wangaratta VIC 3677, Australia","185 Cooper St, Epping VIC 3076, Australia","2 Hastings Rd, Frankston VIC 3199, Australia","1527 Point Nepean Rd, Capel Sound VIC 3940, Australia","50 Church St, Cowes VIC 3922, Australia","141-151 Bentinck St, Portland VIC 3305, Australia","1079 Point Nepean Rd, Rosebud VIC 3939, Australia","40 Ryot St, Warrnambool VIC 3280, Australia","Unit 27/29 Sloane St, Stawell VIC 3380, Australia","41 Victoria Parade, Fitzroy VIC 3065, Australia","Furlong Rd, St Albans VIC 3021, Australia","55 Commercial Rd, Melbourne VIC 3004, Australia","50 Flemington Rd, Parkville VIC 3052, Australia","300 Grattan St, Parkville VIC 3050, Australia","240 Malvern Rd, Prahran VIC 3181, Australia","95-105 Railway Ave, Laverton VIC 3028, Australia","197-199 Sutton St, Warragul VIC 3820, Australia","83 Baillie St, Horsham VIC 3400, Australia","Hamilton Base Hospital, 20 Foster St, Hamilton VIC 3300, Australia","Shell Coles Express Service Station 51-65 Cheltenham Road Corner of, Carroll La, Dandenong VIC 3175, Australia","shop 1/405 Bay St, Port Melbourne VIC 3207, Australia","12 Inglis St, Sale VIC 3850, Australia","42 Murray St, Wonthaggi VIC 3995, Australia","224-226 Beechworth Rd, Wodonga VIC 3690, Australia","88 Fenaughty St, Kyabram VIC 3620, Australia","29 Timins St, Sunbury VIC 3429, Australia","365 Hoddle St, Collingwood VIC 3066, Australia","78 Paisley St, Footscray VIC 3011, Australia","98 Abbotsford St, West Melbourne VIC 3003, Australia","34 Fitzroy St, Kerang VIC 3579, Australia","72 Francis Cres, Ferntree Gully VIC 3156, Australia","2468 Warburton Hwy, Yarra Junction VIC 3797, Australia","18-22 Lakeview Dr, Lilydale VIC 3140, Australia","510 Ballan Rd, Wyndham Vale VIC 3024, Australia","106 Station Rd, Deer Park VIC 3023, Australia","73-79 Little Ryrie St, Geelong VIC 3220, Australia","309 Main Rd E, St Albans VIC 3021, Australia","COVID-19 ONLY Screening Centre (REFERRAL FORM REQUIRED 3, 274 Springvale Rd, Glen Waverley VIC 3150, Australia","COVID-19 ONLY Screening Centre (REFERRAL FORM REQUIRED, 127 Tanti Ave, Mornington VIC 3931, Australia","COVID-19 ONLY Screening Centre (REFERRAL FORM REQUIRED, 10/12 Grey St, Traralgon VIC 3844, Australia","Lime Medical Clinic, 152 Lime Ave, Mildura VIC 3500, Australia","19 Princes Hwy, Werribee VIC 3030, Australia","18 Banksia St, Heidelberg VIC 3084, Australia","107 Jukes Rd, Fawkner VIC 3060, Australia","99 Pier St, Altona VIC 3018, Australia","34 Willis St, Frankston VIC 3199, Australia","127 Wheatsheaf Rd, Glenroy VIC 3046, Australia","1 Mountain Gate Dr, Ferntree Gully VIC 3156, Australia","6 Landale St, Box Hill VIC 3128, Australia","52 Childs Rd, Epping VIC 3076, Australia","14 Hertford Rd, Sunshine VIC 3020, Australia","154 Cleeland St, Dandenong VIC 3175, Australia","1a Vera St, Frankston VIC 3199, Australia","46 Bellarine Hwy, Newcomb VIC 3219, Australia","106 Heaths Rd, Hoppers Crossing VIC 3029, Australia","455 Upper Heidelberg Rd, Heidelberg Heights VIC 3081, Australia","29 Rattray Rd, Montmorency VIC 3094, Australia","321 Mt Dandenong Rd, Croydon VIC 3136, Australia","70 Alfred St, North Melbourne VIC 3051, Australia","153 Jasper Rd, Bentleigh VIC 3204, Australia","28 Cranbourne Rd, Frankston VIC 3199, Australia","28 Station St, Ferntree Gully VIC 3156, Australia","317-319 High St, Thomastown VIC 3074, Australia","571-583 High St, Epping VIC 3076, Australia","120-200 Rosamond Rd, Maribyrnong VIC 3032, Australia","399 Melton Hwy, Taylors Lakes VIC 3038, Australia","250 Heaths Road, Cnr Derrimut Rd, Hoppers Crossing VIC 3029, Australia","Cnr Geelong Rd &amp; Geelong Street, Geelong St, West Footscray VIC 3012, Australia","2-50 Murray Rd, Preston VIC 3072, Australia","425 Burwood Hwy, Wantirna South VIC 3152, Australia","97 Station Rd, Foster VIC 3960, Australia","100 Surf Coast Hwy, Torquay VIC 3228, Australia","Fifteenth St &amp; Deakin Avenue, Mildura VIC 3500, Australia","122 Day St, Bairnsdale VIC 3875, Australia","27 Guthridge St, Ocean Grove VIC 3226, Australia","2-28 Connor St, Colac VIC 3250, Australia","185a/189 Princes Dr, Morwell VIC 3840, Australia","20 Forge Creek Rd, Bairnsdale VIC 3875, Australia",null,"1/1100 Wellington Rd, Rowville VIC 3178, Australia","Coolaroo VIC 3048, Australia","13 Hospital St, Daylesford VIC 3460, Australia","Swan Hill VIC 3585, Australia","Wallan VIC 3756, Australia","704B Old Calder Hwy, Keilor VIC 3036, Australia","10 Village Ave, Traralgon VIC 3844, Australia","146 Baillie St, Horsham VIC 3400, Australia","274-304 Craigieburn Rd, Craigieburn VIC 3064, Australia","Albert St, Lorne VIC 3232, Australia","75 McLachlan St, Apollo Bay VIC 3233, Australia","Epsom Rd, Ascot Vale VIC 3032, Australia","107-139 Churchill Ave, Braybrook VIC 3019, Australia","7 Bogong High Plains Rd, Falls Creek VIC 3699, Australia","6 Lawlers Ct, Mt Hotham VIC 3741, Australia","20 Chamois Rd, Mount Buller VIC 3723, Australia","1099-1169 Pascoe Vale Rd, Broadmeadows VIC 3047, Australia","24-32 Broadway St, Cobram VIC 3644, Australia","2 Katamatite-Nathalia Rd, Numurkah VIC 3636, Australia","79 Jukes Rd, Fawkner VIC 3060, Australia","165 Henry Rd, Pakenham VIC 3810, Australia","Moorooduc Hwy, Frankston VIC 3199, Australia","160 Berwick-Cranbourne Rd, Cranbourne East VIC 3977, Australia","level 2/4 Golfers Dr, Malvern East VIC 3145, Australia","30 Aughtie Dr, Albert Park VIC 3206, Australia","75 Lakeside Dr, Roxburgh Park VIC 3064, Australia","36-44 McDonell St, Nathalia VIC 3638, Australia","1 Anderson Rd, Kilmore VIC 3764, Australia","1067/1125 Western Hwy, Caroline Springs VIC 3023, Australia","3/3-15 Matthews Ave, Niddrie VIC 3042, Australia","13A Wingate Ave, Ascot Vale VIC 3032, Australia","9 Randall St, Maribyrnong VIC 3032, Australia","Fairbairn Park, Newsom Street &amp;, Woods St, Ascot Vale VIC 3032, Australia","103 Wellington St, Flemington VIC 3031, Australia","563a Pascoe Vale Rd, Pascoe Vale VIC 3044, Australia","15/29 Buchan St, Meadow Heights VIC 3048, Australia",null,"Melbourne Airport (MEL), Terminal 4, Airside Rd, Tullamarine VIC 3045, Australia","989 Raglan Parade, Warrnambool VIC 3280, Australia","1 Bretonneux St, Seymour VIC 3660, Australia","25/51 Wootten Rd, Tarneit VIC 3029, Australia","Woodland Waters Reserve, Mernda VIC 3754, Australia","44 Civic Dr, Greensborough VIC 3088, Australia","12 Cooper St, Alexandra VIC 3714, Australia","400 Cheltenham Rd, Keysborough VIC 3173, Australia","185 High St, Hastings VIC 3915, Australia","186 Nicholson St, Fitzroy VIC 3065, Australia","33 Piper St, Yarrawonga VIC 3730, Australia","26 Duncan St, Birchip VIC 3483, Australia","4 Learmonth St, Charlton VIC 3525, Australia","1A Aitken Ave, Donald VIC 3480, Australia","52 N Western Rd, St Arnaud VIC 3478, Australia","19 Grandview St, Wycheproof VIC 3527, Australia"],["doctor establishment health hospital point_of_interest","dentist establishment health point_of_interest","establishment health point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health point_of_interest","establishment health point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest",null,"establishment health hospital point_of_interest","establishment health hospital point_of_interest","locality political","doctor establishment health point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","dentist doctor establishment health hospital point_of_interest","doctor establishment health point_of_interest","establishment health point_of_interest","establishment health point_of_interest","establishment health hospital point_of_interest","establishment point_of_interest","establishment health point_of_interest","establishment health hospital point_of_interest","doctor establishment health point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","dentist doctor establishment health hospital physiotherapist point_of_interest","establishment health point_of_interest","establishment health point_of_interest","establishment health hospital point_of_interest","establishment health point_of_interest","car_repair establishment point_of_interest store","establishment health hospital point_of_interest","doctor establishment health hospital pharmacy point_of_interest store","doctor establishment health point_of_interest","establishment health point_of_interest","establishment health hospital point_of_interest","establishment health point_of_interest","establishment health point_of_interest","establishment health point_of_interest","establishment health point_of_interest","establishment health point_of_interest","establishment point_of_interest","establishment health point_of_interest","street_address","establishment health point_of_interest","establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","street_address","establishment point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","doctor establishment health point_of_interest","establishment point_of_interest","establishment point_of_interest shopping_mall","establishment point_of_interest shopping_mall","establishment point_of_interest shopping_mall","establishment point_of_interest shopping_mall","establishment furniture_store general_contractor hardware_store home_goods_store point_of_interest store","establishment point_of_interest shopping_mall","establishment point_of_interest shopping_mall","establishment health point_of_interest","establishment health point_of_interest","department_store establishment point_of_interest store","establishment health hospital point_of_interest","doctor establishment health point_of_interest","establishment health hospital point_of_interest","establishment health point_of_interest","establishment health point_of_interest",null,"doctor establishment health point_of_interest","locality political","doctor establishment health point_of_interest","locality political","locality political","establishment point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health point_of_interest","establishment point_of_interest","establishment point_of_interest","establishment food lodging point_of_interest restaurant","establishment lodging point_of_interest","establishment point_of_interest real_estate_agency","establishment point_of_interest shopping_mall","dentist establishment health point_of_interest","establishment health point_of_interest","establishment health hospital point_of_interest","establishment point_of_interest","establishment point_of_interest university","establishment point_of_interest","subpremise","establishment point_of_interest","establishment point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment furniture_store general_contractor hardware_store home_goods_store point_of_interest store","establishment health point_of_interest","establishment point_of_interest","establishment point_of_interest","establishment park point_of_interest tourist_attraction","church establishment place_of_worship point_of_interest","establishment point_of_interest","establishment point_of_interest",null,"cafe establishment food meal_takeaway point_of_interest restaurant store","car_repair establishment point_of_interest","establishment health hospital point_of_interest","establishment point_of_interest","establishment park point_of_interest","establishment gym health point_of_interest","establishment health hospital point_of_interest","establishment point_of_interest stadium","establishment health point_of_interest","dentist establishment health point_of_interest","establishment health hospital point_of_interest","establishment health hospital point_of_interest","establishment health point_of_interest","establishment health hospital point_of_interest","establishment health point_of_interest","establishment health point_of_interest"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[144.861863,145.2315216,142.152999,146.8798617,145.0585666,143.8487904,144.3568115,144.3652983,145.5817082,144.280769,144.3592397,145.9947142,145.1187028,145.513889,145.1858631,145.3460403,144.4703049,145.2164722,144.5579637,144.7482315,145.4045256,144.3260923,143.7380248,145.1206656,146.313554,145.0150967,145.1284726,144.8849166,145.241235,141.6051898,144.9036284,142.4734465,142.7813821,144.9750292,144.816248,144.9819197,144.9491384,144.95617,144.9951016,144.7691243,145.9427715,142.208812,142.0303686,145.2081842,144.946038,147.083408,145.5879457,146.8881388,145.0420678,144.7292423,144.9927476,144.894838,144.9453962,143.9183163,145.2869511,145.6150045,145.357422,144.6126753,144.7758013,144.362854,144.8050845,145.1658259,145.0477656,146.541401,142.1560153,144.6680453,145.0700683,144.9673106,144.830462,145.1310752,144.9196626,145.2761545,145.1226517,145.028577,144.8342452,145.2169966,145.1341705,144.389202,144.695736,145.0561811,145.11768,145.291084,144.9381813,145.0410907,145.130031,145.295858,145.0144118,145.0183633,144.8893046,144.776823,144.6803714,144.882944,145.0290765,145.2411111,146.2068148,144.3176979,142.1405106,147.6077859,144.5115773,143.5825894,146.397389,147.610396,145.3972374,145.252842,144.9364069,144.1465032,143.5524803,144.9798236,144.8312332,146.4717147,142.2008418,144.9195593,143.9805906,143.664448,144.9149322,144.8539683,147.2773167,147.1421366,146.4537976,144.919454,145.6513746,145.4435593,144.9687708,145.4537901,145.1361129,145.3090556,145.0821763,144.9610906,144.9311896,145.197655,144.9573806,144.7478383,144.8888804,144.919296,144.8876217,144.898962,144.9317745,144.9218164,144.9218941,144.886939,144.8489247,142.4698771,145.1387513,144.6601885,145.0860929,145.1114385,145.7172472,145.1541807,145.1785667,144.974867,146.0065363,142.915574,143.3530004,142.9763853,143.2469354,143.2339993],[-37.831434,-37.8087539,-34.192219,-36.1319212,-37.7561889,-37.5593895,-38.0853347,-38.152092,-38.6074169,-36.749617,-36.80599028,-36.5553438,-37.8139364,-37.656111,-38.0999735,-38.0449846,-37.2547934,-37.9758735,-37.6869039,-36.1392035,-36.3637012,-38.1900091,-37.0448906,-37.9180109,-36.3541893,-37.6530375,-38.1508127,-38.3623626,-38.4521662,-38.3412033,-38.3562993,-38.379807,-37.0594054,-37.8073462,-37.7593954,-37.8456704,-37.7935372,-37.7989153,-37.8472617,-37.8651826,-38.1532609,-36.7125503,-37.7373844,-37.9909595,-37.83425,-38.108689,-38.6049296,-36.1281557,-36.3151365,-37.586694,-37.798982,-37.800086,-37.8053682,-35.7332965,-37.8763401,-37.7818884,-37.7756955,-37.8715463,-37.7670902,-38.1511535,-37.7451015,-37.8819631,-38.2243551,-38.1934498,-34.1873309,-37.8989601,-37.7596586,-37.7022221,-37.8667,-38.1432131,-37.7067557,-37.8845353,-37.8280935,-37.660474,-37.7815792,-37.9739751,-38.1568489,-38.1702102,-37.8786322,-37.7543598,-37.718297,-37.7994435,-37.7903827,-37.9203766,-38.145616,-37.884415,-37.6757542,-37.6535058,-37.7732279,-37.699141,-37.8770382,-37.802879,-37.7395677,-37.8688889,-38.6596886,-38.328049,-34.2079769,-37.8312086,-38.2624729,-38.3412375,-38.2363484,-37.833385,-36.38266113,-37.92799,-37.6562333,-37.3375487,-35.3396318,-37.4066923,-37.7169095,-38.2185533,-36.7115205,-37.5960859,-38.5448262,-38.7541709,-37.782257,-37.7862285,-36.862675,-36.984523,-37.1480066,-37.680215,-35.9160355,-36.0993453,-37.7031838,-38.0847588,-38.1526224,-38.1188144,-37.8773692,-37.8430336,-37.630996,-36.056341,-37.3011996,-37.7607007,-37.734781,-37.77945,-37.7672439,-37.7729945,-37.7847044,-37.7240808,-37.6551396,-37.71404786,-37.6727751,-38.3708373,-37.0186725,-37.8570496,-37.609574,-37.6894579,-37.1940818,-37.9961229,-38.308472,-37.799393,-36.0117526,-35.9801602,-36.2687784,-36.3664801,-36.6094014,-36.0785444]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>area<\/th>\n      <th>dwelling<\/th>\n      <th>population<\/th>\n      <th>mean_dist<\/th>\n      <th>mean_duration<\/th>\n      <th>n_mesh_blocks<\/th>\n      <th>site_name<\/th>\n      <th>facility<\/th>\n      <th>website<\/th>\n      <th>phone<\/th>\n      <th>site_facilities<\/th>\n      <th>service_availability<\/th>\n      <th>address<\/th>\n      <th>suburb<\/th>\n      <th>state<\/th>\n      <th>postcode<\/th>\n      <th>lga<\/th>\n      <th>delaytext<\/th>\n      <th>full_address<\/th>\n      <th>g_address<\/th>\n      <th>g_types<\/th>\n      <th>RA_CODE_16<\/th>\n      <th>covid_lon<\/th>\n      <th>covid_lat<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,17,24,25]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>#
+#
+df_site_summary %&gt;%
+  write_csv(&#39;output/summary_testing_site.csv&#39;)
+
+
+df_closest_site %&gt;%
+  select(-starts_with(&#39;mc&#39;), -starts_with(&#39;covid&#39;))  %&gt;%
+  inner_join(df_mesh_detail, by = &quot;MB_CODE16&quot;)  %&gt;%
+  inner_join(df_distance_to_testing, by = c(&quot;MB_CODE16&quot;, &#39;id&#39;) ) %&gt;%
+  write_csv(&#39;output/mesh_block_summary.csv&#39;)
+
+#
+#</code></pre>
+<p>marry mesh block into sa2 -</p>
+<p>which SA’s have shortest and longest travel times to testing sites</p>
+<p>average traveltime Meshblock per sa1</p>
+<p>sa1 x avg travel time, sa2 x avg travel time</p>
+<pre class="r"><code>df_closest_site %&gt;%
+  select(-starts_with(&#39;mc&#39;), -starts_with(&#39;covid&#39;))  %&gt;%
+  inner_join(df_mesh_sa1, by = &quot;MB_CODE16&quot;)  %&gt;%
+  select(-starts_with(&#39;mc&#39;), -starts_with(&#39;covid&#39;))  %&gt;%
+  inner_join(df_distance_to_testing, by = c(&quot;MB_CODE16&quot;, &#39;id&#39;) ) %&gt;%
+  group_by(SA1_MAIN16) %&gt;%
+  summarise( dist = mean(dist),
+         duration = mean(duration),
+         n_mesh_blocks = n(), .groups=&#39;drop&#39;) %&gt;%
+  write_csv(&#39;output/summary_sa1.csv&#39;)
+
+
+df_closest_site %&gt;%
+  select(-starts_with(&#39;mc&#39;), -starts_with(&#39;covid&#39;))  %&gt;%
+  inner_join(df_mesh_sa2, by = &quot;MB_CODE16&quot;)  %&gt;%
+  select(-starts_with(&#39;mc&#39;), -starts_with(&#39;covid&#39;))  %&gt;%
+  inner_join(df_distance_to_testing, by = c(&quot;MB_CODE16&quot;, &#39;id&#39;) ) %&gt;%
+  group_by(SA2_MAIN16) %&gt;%
+  summarise( dist = mean(dist),
+            duration = mean(duration),
+            n_mesh_blocks = n(), .groups=&#39;drop&#39;) %&gt;%
+  write_csv(&#39;output/summary_sa2.csv&#39;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.0.3 (2020-10-10)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 20.04.2 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] rvest_1.0.0      leaflet_2.0.4.1  workflowr_1.6.2  cleangeo_0.2-3  
+ [5] maptools_1.1-1   rgeos_0.5-5      sp_1.4-5         geohash_0.4.0   
+ [9] osrm_3.4.0       sf_0.9-7         janitor_2.1.0    rmarkdown_2.7   
+[13] lubridate_1.7.10 geosphere_1.5-10 forcats_0.5.1    stringr_1.4.0   
+[17] dplyr_1.0.5      purrr_0.3.4      readr_1.4.0      tidyr_1.1.3     
+[21] tibble_3.1.0     ggplot2_3.3.3    tidyverse_1.3.0  drake_7.12.7    
+[25] dotenv_1.0.2     conflicted_1.0.4 nvimcom_0.9-102 
+
+loaded via a namespace (and not attached):
+ [1] colorspace_2.0-0   ellipsis_0.3.1     class_7.3-18       rprojroot_2.0.2   
+ [5] snakecase_0.11.0   fs_1.5.0           rstudioapi_0.13    proxy_0.4-25      
+ [9] farver_2.1.0       DT_0.17            fansi_0.4.2        xml2_1.3.2        
+[13] cachem_1.0.4       knitr_1.31         jsonlite_1.7.2     broom_0.7.5       
+[17] dbplyr_2.1.0       compiler_4.0.3     httr_1.4.2         tictoc_1.0        
+[21] backports_1.2.1    assertthat_0.2.1   fastmap_1.1.0      cli_2.3.1         
+[25] later_1.1.0.1      htmltools_0.5.1.1  prettyunits_1.1.1  tools_4.0.3       
+[29] igraph_1.2.6       gtable_0.3.0       glue_1.4.2         Rcpp_1.0.6        
+[33] cellranger_1.1.0   jquerylib_0.1.3    vctrs_0.3.6        crosstalk_1.1.1   
+[37] xfun_0.22          ps_1.6.0           lifecycle_1.0.0    scales_1.1.1      
+[41] hms_1.0.0          promises_1.2.0.1   parallel_4.0.3     yaml_2.2.1        
+[45] memoise_2.0.0      sass_0.3.1         stringi_1.5.3      highr_0.8         
+[49] e1071_1.7-5        filelock_1.0.2     storr_1.2.5        rlang_0.4.10      
+[53] pkgconfig_2.0.3    bitops_1.0-6       evaluate_0.14      lattice_0.20-41   
+[57] htmlwidgets_1.5.3  labeling_0.4.2     tidyselect_1.1.0   magrittr_2.0.1    
+[61] R6_2.5.0           generics_0.1.0     base64url_1.4      txtq_0.2.3        
+[65] DBI_1.1.1          pillar_1.5.1       haven_2.3.1        whisker_0.4       
+[69] foreign_0.8-79     withr_2.4.1        units_0.7-1        RCurl_1.98-1.3    
+[73] modelr_0.1.8       crayon_1.4.1       KernSmooth_2.23-18 utf8_1.2.1        
+[77] progress_1.2.2     grid_4.0.3         readxl_1.3.1       git2r_0.28.0      
+[81] reprex_1.0.0       digest_0.6.27      classInt_0.4-3     httpuv_1.5.5      
+[85] munsell_0.5.0      bslib_0.2.4       </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
