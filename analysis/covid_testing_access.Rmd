@@ -26,10 +26,8 @@ source('packages.R')
 tar_load(df_covid_remoteness)
 tar_load(df_mesh_detail )
 tar_load(df_crow_distances )
-tar_load(df_mesh_in_reach )
-tar_load(df_population_in_reach )
 tar_load(df_driving_time )
-tar_load(df_closest_duration_testingdi)
+tar_load(df_closest_duration_testing)
 tar_load( df_mesh_sa1 )
 tar_load( df_mesh_sa2 )
 
@@ -43,8 +41,8 @@ The closer you are to a covid testing site, the faster it is to get there...
 
 
 df_driving_time %>%
-   #mutate(distance_category=cut(dist, breaks=0:12*5000, labels=make_labels(max_dist=60, divisor=5, descriptor='km'))) %>%
-  mutate(distance_category=cut(distance, breaks=0:10*500000, labels=make_labels(max_dist=500, divisor=50, descriptor='km'))) %>%
+  mutate(distance_category=cut(distance, breaks=0:12*10000, labels=make_labels(max_dist=120, divisor=10, descriptor='km'))) %>%
+  #mutate(distance_category=cut(distance, breaks=0:10*500000, labels=make_labels(max_dist=500, divisor=50, descriptor='km'))) %>%
   group_by(id, distance_category) %>%
   summarise( duration = mean(duration, na.rm=TRUE), .groups='drop' ) %>%
   ggplot(aes( distance_category, duration) ) +

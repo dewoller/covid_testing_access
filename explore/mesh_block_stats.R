@@ -83,3 +83,17 @@ df_driving_time %>%
 df_mesh_in_reach %>%
   count( id ) %>%
   arrange( n )
+
+read_csv('/mnt/temp/summary_testing_site.csv') %>%
+  summarise( across( where( is.numeric), median ))
+read_csv('../hospital_pt_accessability/output/summary_testing_site.csv') %>%
+  summarise( across( where( is.numeric), median ))
+
+
+read_csv('/mnt/temp/summary_testing_site.csv') %>%
+  summarise( across( where( is.numeric), mean, na.rm=TRUE ))
+read_csv('../hospital_pt_accessability/output/summary_testing_site.csv') %>%
+  summarise( across( where( is.numeric), mean, na.rm=TRUE ))
+
+
+
