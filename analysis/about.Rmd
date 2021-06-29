@@ -7,4 +7,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-Describe your project.
+We are trying to determine the accessability of Covid Testing sites in Victoria, Australia. See the paper. The code can be found [http://github.com/dewoller/covid_testing_accessability].
+
+If you want to use the code, here is the citation.
