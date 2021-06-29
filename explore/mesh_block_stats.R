@@ -77,12 +77,12 @@ df_mb2sa1  %>%
 
 
 df_driving_time %>%
-  count( id ) %>%
-  arrange(n)
+  arrange(duration)
+
+  arrange(distance)
 
 df_mesh_in_reach %>%
   count( id ) %>%
-  arrange( n )
 
 read_csv('/mnt/temp/summary_testing_site.csv') %>%
   summarise( across( where( is.numeric), median ))

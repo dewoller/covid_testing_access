@@ -8,7 +8,7 @@ lapply(list.files("./R", full.names = TRUE), source)
 options(scipen = 999)
 
 
-max_distance = 200
+max_distance = 20000
 list(
 
      # get  maps
