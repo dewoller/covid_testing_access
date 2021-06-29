@@ -1,34 +1,37 @@
-
 ---
 title:           Covid Testing Access
 author:          Dennis Wollersheim  and Ali Lakhani
-date:            25.07.2020
+date: "`r format(Sys.time(), '%d %B %Y')`"
 linkcolor:       cyan
 citecolor:       grey
 output:
-  pdf_document:
-    highlight:   zenburn
+    html_document:
+      code_folding: hide
+editor_options: 
+  chunk_output_type: inline
 ---
 
 \tableofcontents
 
 
-# initialisation
-```{r init}
 
-source('_drake.R')
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = '..') 
+```
 
-loadd(df_covid_remoteness)
-loadd(df_mesh_detail )
-loadd(df_crow_distances )
-loadd(df_mesh_in_reach )
-loadd(df_population_in_reach )
-loadd(df_driving_time )
-loadd(df_distance_to_testing)
-loadd( df_mesh_sa1 )
-loadd( df_mesh_sa2 )
+```{r include=FALSE, echo=FALSE}
 
-#df_mesh_correspondence %>% count(RA_CODE_2016 )
+lapply(list.files("./R", full.names = TRUE), source)
+source('packages.R')
+tar_load(df_covid_remoteness)
+tar_load(df_mesh_detail )
+tar_load(df_crow_distances )
+tar_load(df_mesh_in_reach )
+tar_load(df_population_in_reach )
+tar_load(df_driving_time )
+tar_load(df_closest_duration_testingdi)
+tar_load( df_mesh_sa1 )
+tar_load( df_mesh_sa2 )
 
 ```
 
@@ -40,17 +43,12 @@ The closer you are to a covid testing site, the faster it is to get there...
 
 
 df_driving_time %>%
-  select(-starts_with('mc')) %>%
-  inner_join( df_crow_distances %>%
-             select(-starts_with('mc'), -starts_with('covid')),
-                    by=c('MB_CODE16','id') ) %>%
-  mutate(distance_category=cut(dist, breaks=0:12*5000, labels=make_labels(max_dist=60, divisor=5, descriptor='km'))) %>%
+   #mutate(distance_category=cut(dist, breaks=0:12*5000, labels=make_labels(max_dist=60, divisor=5, descriptor='km'))) %>%
+  mutate(distance_category=cut(distance, breaks=0:10*500000, labels=make_labels(max_dist=500, divisor=50, descriptor='km'))) %>%
   group_by(id, distance_category) %>%
-  summarise( duration = mean(duration, .groups='drop' )) %>%
+  summarise( duration = mean(duration, na.rm=TRUE), .groups='drop' ) %>%
   ggplot(aes( distance_category, duration) ) +
   geom_violin()
-
-
 
 
 ```
@@ -62,14 +60,12 @@ df_driving_time %>%
 ```{r}
 
 
-df_distance_to_testing %>%
-  inner_join(df_mesh_detail) %>%
+df_closest_duration_testing %>%
   ggplot( aes( duration) ) + geom_histogram() +
   ggtitle( "Number of mesh blocks by time to drive to nearest testing site")
 
 
-df_distance_to_testing %>%
-  inner_join(df_mesh_detail) %>%
+write_mesh_block_summary %>%
   mutate(duration_category=cut(duration, breaks=0:12*10, labels=make_labels(max_dist=120, divisor=10, descriptor='min'))) %>%
   group_by( duration_category) %>%
   summarise( persons = sum(Person)) %>%
@@ -80,50 +76,14 @@ df_distance_to_testing %>%
 
 ```
 
-closest testing site to mesh block
-
-How many mesh blocks / population are closest to a test site
-
-for each mesh block, find the closest test site (as crow flies )
-for each test site, how many mesh blocks / population / average road distance  to these closest mesh blocks
-
-testing site x closest population, number of mesh blocks
-
-remoteness of testing site (based on shape file)
-
-```{r}
-```
 
 
-
-marry mesh block into sa2 -
-
-
-which SA's have shortest and longest travel times to testing sites
-
-average traveltime Meshblock per sa1
+```{r population_vs_distance}
 
 
-sa1 x avg travel time, sa2 x avg travel time
-
-
-```{r csv }
+df_site_summary %>%
+  ggplot( aes( pop, tt, label=site_name, color=RA_CODE16  ) ) +
+  geom_point()
 
 ```
 
-
-
-marry mesh block into sa2 -
-
-
-which SA's have shortest and longest travel times to testing sites
-
-average traveltime Meshblock per sa1
-
-
-sa1 x avg travel time, sa2 x avg travel time
-
-
-```{r other_csv }
-
-```
