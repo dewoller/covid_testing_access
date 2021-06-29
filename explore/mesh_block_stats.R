@@ -77,9 +77,13 @@ df_mb2sa1  %>%
 
 
 df_driving_time %>%
-  count( id ) %>%
-  arrange(n)
+  arrange(duration)
+
+  arrange(distance)
 
 df_mesh_in_reach %>%
   count( id ) %>%
-  arrange( n )
+  arrange( n ) %>%
+  filter( id==3 )
+
+count( n==2)
