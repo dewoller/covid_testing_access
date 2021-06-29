@@ -1,8 +1,9 @@
 ## library() calls go here
 library(conflicted)
 library(dotenv)
-library(drake)
+library(targets)
 library(tidyverse)
+library(readxl)
 #library(revgeo)
 #library(ggmap)
 
@@ -43,14 +44,14 @@ library(osrm)         # routing package
 #library(e1071)
 
 
-library(geohash)
-library(cleangeo)
+# library(geohash)
+# library(cleangeo)
 library(sp)
-library(rgeos)
-library(workflowr)
-library(leaflet)
+# library(rgeos)
+# library(workflowr)
+# library(leaflet)
 
-library(rvest)
+# library(rvest)
 conflict_prefer("pluck", "purrr")
 
 conflicted::conflict_prefer('filter','dplyr')

@@ -1,4 +1,3 @@
-#source('_drake.R')
 
 
 get_lga_covid_cases = function() {

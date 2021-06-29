@@ -28,7 +28,7 @@ loadd(df_distance_to_testing)
 loadd( df_mesh_sa1 )
 loadd( df_mesh_sa2 )
 
-df_mesh_correspondence %>% count(RA_CODE_2016 )
+#df_mesh_correspondence %>% count(RA_CODE_2016 )
 
 ```
 
@@ -92,45 +92,6 @@ testing site x closest population, number of mesh blocks
 remoteness of testing site (based on shape file)
 
 ```{r}
-
-df_crow_distances %>%
-  group_by( MB_CODE16) %>%
-  filter( dist == min(dist) ) %>%
-  ungroup() %>%
-  { . } -> df_closest_site
-
-df_closest_site %>%
-  select(-starts_with('mc'), -starts_with('covid'))  %>%
-  inner_join(df_mesh_detail, by = "MB_CODE16")  %>%
-  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
-  group_by(id)  %>%
-  summarise( area = sum(AREA_ALBERS_SQKM ),
-           dwelling = sum(Dwelling),
-            population = sum(Person),
-            mean_dist = mean(dist),
-            mean_duration = mean(duration),
-            n_mesh_blocks=n(),
-            .groups='drop'
-            ) %>%
-  inner_join( df_covid_remoteness, by='id') %>%
-  { . } -> df_site_summary
-#
-#
-df_site_summary %>%
-  write_csv('output/summary_testing_site.csv')
-
-
-df_closest_site %>%
-  select(-starts_with('mc'), -starts_with('covid'))  %>%
-  inner_join(df_mesh_detail, by = "MB_CODE16")  %>%
-  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
-  write_csv('output/mesh_block_summary.csv')
-
-#
-#
-df_site_summary %>%
-  write_csv('output/summary_testing_site.csv')
-
 ```
 
 
@@ -148,30 +109,6 @@ sa1 x avg travel time, sa2 x avg travel time
 
 ```{r csv }
 
-df_closest_site %>%
-  select(-starts_with('mc'), -starts_with('covid'))  %>%
-  inner_join(df_mesh_sa1, by = "MB_CODE16")  %>%
-  select(-starts_with('mc'), -starts_with('covid'))  %>%
-  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
-  group_by(SA1_MAIN16) %>%
-  summarise( dist = mean(dist),
-         duration = mean(duration),
-         n_mesh_blocks = n(), .groups='drop') %>%
-  write_csv('output/summary_sa1.csv')
-
-
-df_closest_site %>%
-  select(-starts_with('mc'), -starts_with('covid'))  %>%
-  inner_join(df_mesh_sa2, by = "MB_CODE16")  %>%
-  select(-starts_with('mc'), -starts_with('covid'))  %>%
-  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
-  group_by(SA2_MAIN16) %>%
-  summarise( dist = mean(dist),
-            duration = mean(duration),
-            n_mesh_blocks = n(), .groups='drop') %>%
-  write_csv('output/summary_sa2.csv')
-
-
 ```
 
 
@@ -187,30 +124,6 @@ average traveltime Meshblock per sa1
 sa1 x avg travel time, sa2 x avg travel time
 
 
-```{r csv }
-
-df_closest_site %>%
-  select(-starts_with('mc'), -starts_with('covid'))  %>%
-  inner_join(df_mesh_sa1, by = "MB_CODE16")  %>%
-  select(-starts_with('mc'), -starts_with('covid'))  %>%
-  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
-  group_by(SA1_MAIN16) %>%
-  summarise( dist = mean(dist),
-         duration = mean(duration),
-         n_mesh_blocks = n(), .groups='drop') %>%
-  write_csv('output/summary_sa1.csv')
-
-
-df_closest_site %>%
-  select(-starts_with('mc'), -starts_with('covid'))  %>%
-  inner_join(df_mesh_sa2, by = "MB_CODE16")  %>%
-  select(-starts_with('mc'), -starts_with('covid'))  %>%
-  inner_join(df_distance_to_testing, by = c("MB_CODE16", 'id') ) %>%
-  group_by(SA2_MAIN16) %>%
-  summarise( dist = mean(dist),
-            duration = mean(duration),
-            n_mesh_blocks = n(), .groups='drop') %>%
-  write_csv('output/summary_sa2.csv')
-
+```{r other_csv }
 
 ```
