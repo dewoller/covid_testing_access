@@ -6,7 +6,6 @@ calculate_driving_time <- function( df_mesh_in_reach ) {
   tictoc::tic('finished overall driving time calculation')
   #
   df_mesh_in_reach %>%
-    filter( id<3) %>%
     group_by(id) %>%
     select( id, lon = covid_lon, lat=covid_lat,  MB_CODE16, mc_lon, mc_lat ) %>%
     nest( data=c(MB_CODE16, mc_lon, mc_lat )) %>%

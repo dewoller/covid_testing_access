@@ -23,13 +23,17 @@ knitr::opts_knit$set(root.dir = '..')
 
 lapply(list.files("./R", full.names = TRUE), source)
 source('packages.R')
-tar_load(df_covid_remoteness)
-tar_load(df_mesh_detail )
-tar_load(df_crow_distances )
+tar_load(df_site_summary)
+tar_load(write_mesh_block_summary)
 tar_load(df_driving_time )
 tar_load(df_closest_duration_testing)
-tar_load( df_mesh_sa1 )
-tar_load( df_mesh_sa2 )
+
+tar_read(map_remoteness) %>%
+  st_drop_geometry() %>%
+  distinct( RA_CODE16, RA_NAME16 ) %>% 
+  mutate( RA_NAME16 = str_replace( RA_NAME16, ' (of )?Australia','') ) %>%
+  mutate( RA_NAME16 = str_replace( RA_NAME16, ' \\([^)]*\\)','') ) %>%
+  { . } -> RA_lookup
 
 ```
 
@@ -64,7 +68,7 @@ df_closest_duration_testing %>%
 
 
 write_mesh_block_summary %>%
-  mutate(duration_category=cut(duration, breaks=0:12*10, labels=make_labels(max_dist=120, divisor=10, descriptor='min'))) %>%
+  mutate(duration_category=cut(duration, breaks=0:6*100, labels=make_labels(max_dist=600, divisor=100, descriptor='min'))) %>%
   group_by( duration_category) %>%
   summarise( persons = sum(Person)) %>%
   ggplot( aes( duration_category, persons) ) +
@@ -74,14 +78,119 @@ write_mesh_block_summary %>%
 
 ```
 
+# Population vs Time, colored by remoteness
 
-
-```{r population_vs_distance}
+```{r population_vs_time_remoteness}
 
 
 df_site_summary %>%
-  ggplot( aes( pop, tt, label=site_name, color=RA_CODE16  ) ) +
-  geom_point()
+  inner_join(  RA_lookup, by='RA_CODE16') %>%
+  mutate( RA_NAME16 = fct_relevel( RA_NAME16, "Major Cities")) %>%
+  rename(`Regional Classification\nof POCT Site` = RA_NAME16 ) %>%
+  ggplot( aes( population, mean_duration,  color=`Regional Classification\nof POCT Site`) ) +
+  geom_point() +
+  xlab('Number of closest residents') +
+  ylab('Mean travel time (min.) for closest residents') +
+  ggtitle('Travel time for Victorian residents to their closest POCT site') 
+
+
 
 ```
+
+
+# Population vs Time, colored by seifa
+
+```{r population_vs_time_seifa}
+
+
+df_site_summary %>%
+  inner_join(  RA_lookup, by='RA_CODE16') %>%
+  ggplot( aes( population, mean_duration,  color=mean_catchment_seifa  ) ) +
+  geom_point() +
+  xlab('Test site catchment population') +
+  ylab('Mean travel time (minutes)') +
+  ggtitle('How long does it take to drive to a covid testing site?') 
+
+
+```
+
+
+
+# Population vs Time, colored by seifa quintile
+
+```{r population_vs_time_quintiles}
+
+
+df_site_summary %>%
+  inner_join(  RA_lookup, by='RA_CODE16') %>%
+  mutate( seifa_quintile = cut( mean_catchment_seifa, 5 )) %>%
+  ggplot( aes( population, mean_duration,  color=seifa_quintile  ) ) +
+  geom_jitter() +
+  xlab('Test site catchment population') +
+  ylab('Mean travel time (minutes)') +
+  ggtitle('How long does it take to drive to a covid testing site?') 
+
+
+```
+
+# Meshblock sizes and populations
+
+```{r meshblock_stats, results='asis'}
+tar_load(df_mesh_detail)
+
+df_mesh_detail %>%
+  select(  Area=AREA_ALBERS_SQKM,Population = Person ) %>% 
+  pivot_longer(cols=everything() ) %>%
+  group_by(name) %>%
+  summarise( min = min(value), 
+                      q25 = quantile((value), 0.25), 
+                      median = median(value), 
+                      q75 = quantile((value), 0.75), 
+                      max = max(value),
+                      mean = mean(value), 
+                      sd = sd(value), 
+                      chart = spk_chr(  hist(value,plot=FALSE)$counts)) %>%
+    gt::gt() %>%
+  fmt_markdown(columns = vars(chart)) %>%
+    fmt_number( columns=c(where( is.numeric)), decimals=3) %>%
+    fmt_number( rows=2, columns=c(where( is.numeric)), decimals=0) %>%
+ gt:::as.tags.gt_tbl() %>%
+ htmltools::attachDependencies( htmlwidgets::getDependency("sparkline")) 
+
+```
+
+# site stats
+
+```{r site_stats, results='asis'}
+
+options( scipen=999)
+df_site_summary %>%
+  select( RA_CODE16, mean_duration,population ) %>% 
+  pivot_longer(cols=-RA_CODE16 ) %>%
+  group_by( RA_CODE16, name ) %>%
+  summarise( min = min(value), 
+            p25 = quantile((value), 0.25), 
+            Median = median(value), 
+            p75  = quantile((value), 0.75), 
+            Max = max(value),
+            Mean = mean(value), 
+            Std.Dev = sd(value), 
+            Histogram = spk_chr(  hist(value,plot=FALSE)$counts), 
+            .groups='drop') %>%
+  ungroup() %>%
+  inner_join(  RA_lookup, by='RA_CODE16') %>%
+  arrange( name, RA_CODE16  ) %>%
+  select( -RA_CODE16) %>%
+  gt(groupname_col='name', rowname_col='RA_NAME16') %>%
+  cols_label(
+             p25 = html("25th<br>Percentile"),
+             p75 = html("75th<br>Percentile")
+             ) %>%
+  fmt_number( columns=c(where( is.numeric)), decimals=0) %>%
+  fmt_markdown(columns = vars(Histogram)) %>%
+  gt:::as.tags.gt_tbl() %>%
+  htmltools::attachDependencies( htmlwidgets::getDependency("sparkline")) 
+
+```
+
 

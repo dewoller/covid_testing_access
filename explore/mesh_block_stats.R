@@ -86,13 +86,13 @@ df_mesh_in_reach %>%
 
 read_csv('/mnt/temp/summary_testing_site.csv') %>%
   summarise( across( where( is.numeric), median ))
-read_csv('../hospital_pt_accessability/output/summary_testing_site.csv') %>%
+read_csv('output/summary_testing_site.csv') %>%
   summarise( across( where( is.numeric), median ))
 
 
 read_csv('/mnt/temp/summary_testing_site.csv') %>%
   summarise( across( where( is.numeric), mean, na.rm=TRUE ))
-read_csv('../hospital_pt_accessability/output/summary_testing_site.csv') %>%
+read_csv('output/summary_testing_site.csv') %>%
   summarise( across( where( is.numeric), mean, na.rm=TRUE ))
 
 

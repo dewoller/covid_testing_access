@@ -4,52 +4,15 @@ library(dotenv)
 library(targets)
 library(tidyverse)
 library(readxl)
-#library(revgeo)
-#library(ggmap)
-
 library(geosphere)
-#library(spatstat)
-#library("R.cache")
-#library("googleway")
-#library("purrrlyr")
-#library(tidyjson)
 library(lubridate)
-#library(foreign )
-#library(wrapr )   # for the qc function
 library(rmarkdown)
 library(janitor)
-#library(caret)
-#library(parsnip)
-#library(gt)
-#library(testthat)
-
 library(sf)
-#library(readxl)
-
-#library(stplanr)      # geographic transport data package
-#library(tmap)         # visualization package (see Chapter 8)
 library(osrm)         # routing package
-#library(dodgr)         # routing package
-#library(multidplyr)         # routing package
-
-#library(graphhopper)         # routing package
-
-#install.packages('stplanr')
-#install.packages('dodgr')
-#install.packages('GGally')
-
-
-#library(corrplot) # for correlation plot
-#library(GGally) # for parallel coordinate plot
-#library(e1071)
-
-
-# library(geohash)
-# library(cleangeo)
 library(sp)
-# library(rgeos)
-# library(workflowr)
-# library(leaflet)
+library(sparkline)
+library(gt)
 
 # library(rvest)
 conflict_prefer("pluck", "purrr")
